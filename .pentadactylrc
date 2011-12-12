@@ -1,0 +1,74 @@
+" vim: ft=vim :
+
+
+"setting
+set! browser.tabs.closeWindowWithLastTab=false
+"set showtabline=always
+set complete=lsf
+
+"set guioptions+=B
+" set guioptions-=r
+
+"set defsearch='g'
+"set suggestengines='g'
+
+
+set passkeys+=towords.com:abcdrABCDR<space><cr>
+set passkeys+=*:<c-c>
+"
+map <F2> :bmarks<cr> 
+
+map <space>vr :source ~/.pentadactylrc<cr>
+map sw :bmarks 
+nmap ; :
+"Moving
+noremap J 10j
+noremap K 10k
+noremap H 10h
+noremap L 10l
+nmap gg <Home>
+nmap G <End>
+
+noremap s :stop<cr>
+noremap S :stopall<cr>
+" noremap <c-f> <c-u>
+
+noremap <scroll-up-line> 19k
+noremap <scroll-down-line> 19j
+"window
+noremap <c-w><c-q> d
+noremap <c-w><c-e> d
+noremap <c-w><c-w> d
+noremap <c-w><c-x> d
+noremap <c-v><c-q> d
+
+noremap <c-w>q d
+noremap <c-w>Q d
+noremap <c-q> d
+imap <c-q> <Nop>
+tmap <c-q> <Nop>
+cmap <c-q> <Nop>
+noremap q d
+noremap Q d
+nnoremap <c-w><c-x> :q<cr>
+
+nnoremap <c-w><c-w> gt
+nnoremap <c-w><c-e> gT
+nnoremap <s-tab> gT
+nnoremap <c-w><c-r> <c-s-t>
+nnoremap <c-w><c-z> <c-s-t>
+
+nnoremap <m-up> gu
+"group your tab hotkey
+nnoremap <c-w><c-s> <c-s-e>
+
+nmap <bs> <c-o>
+
+"edit
+map <c-c> <yank-word>
+nmap <c-s> :redraw<cr>
+noremap <space>g :tabopen g 
+noremap <space>w :tabopen w 
+"Reloading
+noremap <space>R :reloada !<cr>
+noremap <space>r :reloada<cr>
