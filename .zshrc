@@ -3,9 +3,19 @@
 # plugins=(archlinux sprunge git)
 # omz init
 
+
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+eval _$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+eval $color='%{$fg[${(L)color}]%}'
+(( count = $count + 1 ))
+done
+FINISH="%{$terminfo[sgr0]%}"
+RESET="%{$reset_color%}"
+bindkey -v
+
 ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="robbyrussell"
-plugins=(git archlinux django vi-mode github)
+ZSH_THEME="rykka"
+plugins=(git archlinux django github)
 source $ZSH/oh-my-zsh.sh
 
 # for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
