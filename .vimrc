@@ -20,8 +20,13 @@
 "  "Tough time Goes , Tough People Stay." "}}}
 """""""""""""""""""""""""""""""""""""""""""""""""
 " 1.General_Settings{{{1
+"{{{ bundles load once
+if !exists("g:bundles_loaded") || g:bundles_loaded != 1
+    let g:bundles_loaded = 1
 "{{{ Vundle
 "load all bundles
+
+
 set nocompatible               " be iMproved
 filetype off                   " required!
 set rtp+=~/.vim/bundle/vundle/
@@ -112,7 +117,7 @@ Bundle 'fs111/pydoc.vim'
   " git submodule init
   " git submodule update
 
-Bundle 'kevinw/pyflakes-vim'
+" Bundle 'kevinw/pyflakes-vim'
 Bundle 'vim-scripts/sketch.vim'
 " ~/.vim/bundle/IndentHL--Summers/after/syntax/python/indenthl.vim
 " Bundle 'vim-scripts/IndentHL--Summers'
@@ -135,14 +140,19 @@ if v:version<700
 endif
 set rtp+=~/.vim/bundle/conque/
 
-filetype plugin indent on     " required!
 
 "Bundle 'rykka/colorizer'
-"}}}
-"Basic Setting"{{{
 set nocompatible
 syntax on
-filetype plugin indent on
+filetype plugin indent on     " required!
+
+
+"}}}
+endif
+
+"}}}
+
+"Basic Setting"{{{
 "history
 "the browse window's directory
 set browsedir=buffer
@@ -1389,7 +1399,7 @@ nmap <leader>11 :filetype detect \| syntax enable \| call Color_Modify() <CR>
 nmap <leader>1me  :emenu Syntax.
 "nnoremap <silent> <leader>1 :nohl<CR>
 " DONE: 110519 clear all hlsearch without warningmsg
-nnoremap <silent> <c-l> :let @/=''\|redraw<CR>
+nnoremap <silent> <c-l> :let @/=''\|redraw!<CR>
 "}}}
 " 4.2.Window_control_mapping
 "Window Mapping  <C-W> "{{{
@@ -1498,8 +1508,8 @@ endfun "}}}
 " 4.3.move_around_mapping
 inoremap <c-d> <c-o>de
 
-noremap <c-f> <c-u>
-noremap <c-u> <c-f>
+" noremap <c-f> <c-u>
+" noremap <c-u> <c-f>
 
 
 "}}}
@@ -1569,26 +1579,6 @@ nnoremap <c-p> N
 vnoremap <leader>/ "sy<c-c>/\(\)\@<!<c-r>s<Home><right><right>
 vnoremap <leader>? "sy<c-c>/<c-r>s\(\)\@!<left><left><left><left><left>
 
-"hijk in insert / visual mode
-"moving in insert mode
-"some inoremap move like emacs
-ino <m-j> <c-o>j
-ino <m-k> <c-o>k
-ino <m-h> <left>
-ino <m-l> <right>
-
-" ino <c-l> <right>
-" ino <c-h> <left>
-
-ino <c-bs> <c-o>dge
-ino <c-left> <c-o>B
-"emacs behavior
-" noremap <c-a> ^
-" inoremap <c-a> <esc>^i
-noremap <c-b> ^
-inoremap <c-b> <esc>^i
-inoremap <c-e><c-e> <esc>$a
-noremap <c-e><c-e> $
 " vmap <leader>vs :'<,'>s/\(\S*\)\s*\(\S*\)/"\1":"\2",/<CR>\|:norm! `<I{<esc>`>A}<esc>\|:'<,'>y +<CR>\|:echo @+<CR>
 
 
@@ -1815,6 +1805,40 @@ noremap <C-Q>		<C-V>
 
 "}}}
 
+"hijk in insert / visual mode
+"moving in insert mode
+"some inoremap move like emacs
+ino <m-j> <c-o>j
+ino <m-k> <c-o>k
+ino <m-h> <left>
+ino <m-l> <right>
+
+ino <m-e>  <esc>ea
+ino <m-E>  <esc>Ea
+ino <m-b>  <esc>bi
+ino <m-B>  <esc>Bi
+
+ino <m-f>  <c-o>f
+ino <m-F>  <c-o>F
+
+ino <m-o> <c-o>o
+ino <m-O> <c-o>O
+ino <m-c>  <esc>
+" im  <m-;>  <c-o>:
+" im  <m-">  "
+" ino <c-l> <right>
+" ino <c-h> <left>
+
+ino <c-bs> <c-o>dge
+ino <c-left> <c-o>B
+"emacs behavior
+" noremap <c-a> ^
+" inoremap <c-a> <esc>^i
+noremap <c-b> ^
+inoremap <c-b> <esc>^i
+inoremap <c-e><c-e> <esc>$a
+noremap <c-e><c-e> $
+
 "close pairs [] {} ()"{{{
 vno [p <esc>`>a]<esc>`<i[<esc>lv`>l
 vno {{ <esc>`>a}<esc>`<i{<esc>lv`>l
@@ -1836,6 +1860,8 @@ ino [<c-e> [<esc>mzEa]<esc>`za
 ino (( ()<left>
 ino (<c-e> (<esc>mzEa)<esc>`za
 ino () ()
+ino <> <>
+ino <<  <><left>
 "   ((efweaf)))
 ino `` ``<left>
 ino ''  ''<left>
