@@ -4,43 +4,12 @@
 # omz init
 
 
-for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-eval _$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-eval $color='%{$fg[${(L)color}]%}'
-(( count = $count + 1 ))
-done
-FINISH="%{$terminfo[sgr0]%}"
-RESET="%{$reset_color%}"
 bindkey -v
 
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="rykka"
 plugins=(git archlinux django github)
 source $ZSH/oh-my-zsh.sh
-
-# for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-# eval _$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-# eval $color='%{$fg[${(L)color}]%}'
-# (( count = $count + 1 ))
-# done
-# FINISH="%{$terminfo[sgr0]%}"
-# 
-# # zsh prompt with vi-mode hint
-# PROMPT=$(echo "$CYAN%/
-# $_CYAN>>>$FINISH ")
-# # 
-# function zle-line-init zle-keymap-select {
-#     # RPROMPT=$(echo "$BLUE%n@%M$FINISH")
-# PROMPT=$(echo "$CYAN%/
-# $_CYAN${${KEYMAP/vicmd/:::}/(main|viins)/>>>}$FINISH ")
-#     # RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-#     # RPS2=$RPS1
-#     zle reset-prompt
-# }
-# 
-# zle -N zle-line-init
-# zle -N zle-keymap-select
-#
 #
 #######################################################################
 #             Customization by User
