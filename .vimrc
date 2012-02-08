@@ -1,26 +1,11 @@
-" vim:tw=0 sw=4 ts=4 sts=4 fdm=marker fdls=0 :
 """""""""""""""""""""""""""""""""""""""""""""""""
-"vimrc Index "{{{
-"1.General_Settings
-"  1.1.guifonts_color_and_term
-"  1.2.Misc_Settings
-"2.AutoCmd_Group
-"3.Commands_And_Abbreviations
-"4.Key_Mapping_General
-"  4.1.Leader_Mapping
-"  4.2.Window_control_mapping
-"  4.3.move_around_mapping
-"  4.4.Edit_and_formatting
-"  4.5.win_behave_settings
-"5.Plugins_settings
-"6.Function_And_Key_Mapping
-"7.Other_Stuffs
-"  Author: Rykka.Krin <Rykka10@gmail.com>
+"  Script: Rykka's Vimrc
+"  Author: Rykka <Rykka10(at)gmail.com>
 "  Update: 2012-02-09
-"  "Tough time Goes , Tough People Stay." "}}}
+"  License: WTFPL v2.0
 """""""""""""""""""""""""""""""""""""""""""""""""
 " 1.General_Settings{{{1
-"{{{2 1.0. bundles load
+"{{{2 1.0.Bundles
 if !exists("g:bundles_loaded") || g:bundles_loaded != 1
     let g:bundles_loaded = 1
 
@@ -100,7 +85,10 @@ Bundle 'Rykka/lastbuf.vim'
     syntax on
     filetype plugin indent on     " required!
 endif
-"Basic Setting "{{{2
+"1.1.Basic "{{{2
+let s:win_col = 80
+let s:win_col_span2 = 2 * s:win_col + 1
+let s:win_pos = 550
 function! s:auto_mkdir(dir, force) "{{{
     if !isdirectory(a:dir) && (a:force ||
                 \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
@@ -189,7 +177,7 @@ else
         set clipboard=
     endif
 endif "}}}
-"{{{2 Multi_Byte
+" 1.2.Multi_Byte "{{{2
 set fileformats=unix,dos
 set termencoding=utf-8
 set fileencodings=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936,latin-1
@@ -207,7 +195,7 @@ endif
 if has('arabic')
     set noarabicshape
 endif
-" 1.1.ui fonts colors "{{{2
+" 1.3.ui fonts colors "{{{2
 "{{{ Guifont And Color
 if has("gui_running")
     if has ("win32") ||  has ("win64")
@@ -248,11 +236,7 @@ if has('wildmenu')
     set cpoptions-=<  "compatible-options"
     set wildcharm=<C-Z> "wildchar inside macro"
 endif
-" 1.2.vimrc s:var "{{{2
-let s:win_col = 80
-let s:win_col_span2 = 2 * s:win_col + 1
-let s:win_pos = 550
-" 1.3.vim version"{{{2
+" 1.4.vim version"{{{2
 if v:version >= 703 "{{{
     let &colorcolumn=s:win_col-1
 
@@ -270,7 +254,7 @@ aug au_GuiEnter "{{{
     exe "au GuiEnter * winsize ".s:win_col." 45"
     au GuiEnter * silent! normal! V<ctrl-c>
 aug END "}}}
-aug au_vimrc "{{{
+aug au_Vimrc "{{{
     au!
     au SourcePre ~/.vimrc redraw | echohl WarningMsg
                 \|echo "Reloading .vimrc"|echohl Normal
@@ -293,7 +277,7 @@ aug au_Filetypes "{{{
     au BufRead,BufNew,BufNewFile *.conf setl ft=conf
     au BufRead,BufNew,BufNewFile tmux.conf setl ft=tmux
 aug END "}}}
-aug au_htmls "{{{
+aug au_Htmls "{{{
     au!
     " Autoclose tags on html, xml, etc
     au FileType php,html,xhtml,xml imap <buffer> <C-m-b> </<C-X><C-O>
@@ -304,7 +288,7 @@ aug au_colors "{{{
     au!
     au! FileType vimwiki call Vimwiki_color()
     au! colorscheme *.vwk call Vimwiki_color()
-fun! Vimwiki_color() "{{{
+function! Vimwiki_color() "{{{
     silent! syn clear VimwikiTimeStamp
     syn match VimwikiTimeStamp /\%(\d\{4}-\d\{2}-\d\{2}\|\d\{6}_\d\{4}\|\d\{6}\)/
 
@@ -357,6 +341,7 @@ function! s:delete_this() "{{{
     endif
 endfunction "}}}
 command! Delete call <SID>delete_this()
+
 function! s:rename(name) "{{{
     let f = expand('%:p')
     saveas a:name
@@ -370,12 +355,15 @@ function! s:rename(name) "{{{
     endif
 endfunction "}}}
 command! -nargs=1 Rename call <SID>rename(<q-args>)
-command! CopyFileName let @+ = expand('%:p:t')
-command! CopyFilePath let @+ = expand('%:p:h')
-command! CopyFileFull let @+ = expand('%:p')
-"trim whitespace
-command! TrimWhiteSpace %s/\s\+$//
+
+command! CopyName let @+ = expand('%:p:t')
+command! CopyPath let @+ = expand('%:p:h')
+command! CopyFull let @+ = expand('%:p')
+
+"trim white
+command! TrimWhite %s/\s\+$//
 command! TrimCtrlM %s//\r/
+
 function! s:last_update() "{{{
     let rx_str_upd='\%(Change\|Update\|Updated\|Modified\)'
     for i in range(1,30)
@@ -393,13 +381,11 @@ endfunction "}}}
 command! -nargs=0 LastUpdate call <SID>last_update()
 
 command! Gcc !gcc `pkg-config --cflags --libs gtk+-2.0` '%:p' -o %:t:r.o -lm
-command! Gco call <SID>gco()
 function! s:gco() "{{{
     !gcc `pkg-config --cflags --libs gtk+-2.0`  -c -fpic % -o %:t:r.o
     !gcc -shared -lc  -o %:t:r.so  %:t:r.o
 endfunction "}}}
-command! -nargs=1 Lbs call <SID>libc_it("str",<f-args>)
-command! -nargs=1 Lbi call <SID>libc_it("int",<f-args>)
+command! Gco call <SID>gco()
 function! s:libc_it(type,func,para) "{{{
     let file=expand('%:p:r').".so"
     call s:gco()
@@ -409,6 +395,8 @@ function! s:libc_it(type,func,para) "{{{
         echo libcallnr(file,a:func,a:para)
     endif
 endfunction "}}}
+command! -nargs=1 Lbs call <SID>libc_it("str",<f-args>)
+command! -nargs=1 Lbi call <SID>libc_it("int",<f-args>)
 command! Gcld !gcc -o %:t:r % -ldl
 command! Gpp !g++ `pkg-config --cflags --libs gtk+-2.0` -c -fPIC % -o %:t:r.o
 command! Gpso !g++ -shared -Wl,-soname,%:t:r.so -o  %:t:r.so  %:t:r.o
@@ -428,20 +416,19 @@ digraphs \|v 8595 \|^ 8593
 " 4.Key_Mapping_General{{{1
 " 4.0.F1-F12 "{{{2
 "{{{ F1 Help
-noremap <F1> K
-nnoremap <S-F1> :Pydoc <C-R>=expand("<cword>")<CR><CR>
+nor <F1> K
+nno <S-F1> :Pydoc <C-R>=expand("<cword>")<CR><CR>
 set keywordprg=":help"
 set helplang=en,cn
 cabbrev H helpg
 "}}}
 "{{{ F2 Replace @/
-nnoremap <F2> :%<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
-vnoremap <F2> :<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
-nnoremap <S-F2> :%<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
-vnoremap <S-F2> :<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
+nno <F2> :%<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
+vno <F2> :<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
+nno <S-F2> :%<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
+vno <S-F2> :<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
 "}}}
-"{{{F3 Ack-grep
-" better-than-grep.com
+"{{{F3 Ack-grep http://better-than-grep.com
 function! Ack(args) "{{{
     let grepprg_bak=&grepprg
     set grepprg=ack\ -H\ --nocolor\ --nogroup
@@ -451,22 +438,22 @@ function! Ack(args) "{{{
     redraw!
 endfunction "}}}
 command! -nargs=* -complete=file Ack call Ack(<q-args>)
-noremap <F3> :Ack <C-R><C-F> %<CR>
-vnoremap <F3> y:Ack <C-R>" %<CR>
-noremap <S-F3> :Ack <C-R><C-F><CR>
-vnoremap <S-F3> y:Ack <C-R>"<CR>
+nor <F3> :Ack <C-R><C-F> %<CR>
+vno <F3> y:Ack <C-R>" %<CR>
+nor <S-F3> :Ack <C-R><C-F><CR>
+vno <S-F3> y:Ack <C-R>"<CR>
 let g:w_qf=0
-noremap <C-F3> :if g:w_qf==0\|cw\|let g:w_qf=1\|else\|ccl\|
+nor <C-F3> :if g:w_qf==0\|cw\|let g:w_qf=1\|else\|ccl\|
             \let g:w_qf=0\|endif<CR>
 "}}}
 "{{{ F4 Folder
-nnoremap <F4> :CtrlP<CR>
-nnoremap <S-F4> :Explore<CR>
-nnoremap <C-F4> :Unite file<cr>
+nno <F4> :CtrlP<CR>
+nno <S-F4> :Explore<CR>
+nno <C-F4> :Unite file<cr>
 "}}}
 "{{{ F5 Execute
-nnoremap <silent> <F5> :call <SID>exe("n")<CR>
-vnoremap <silent> <F5> :call <SID>exe("v")<CR>
+nno <silent> <F5> :call <SID>exe("n")<CR>
+vno <silent> <F5> :call <SID>exe("v")<CR>
 function! s:exe(mode) range "{{{
     update
 
@@ -519,14 +506,14 @@ function! s:exe(mode) range "{{{
         endfor
     endif
 endfunction "}}}
-nnoremap <C-F5> :Gcc<CR>
+nno <C-F5> :Gcc<CR>
 "}}}
-noremap <F6> :TagbarToggle<CR>
-noremap <F7> :GundoToggle<CR>
+nor <F6> :TagbarToggle<CR>
+nor <F7> :GundoToggle<CR>
 "{{{ F8 File Manager / Terminal
-noremap <silent><F8> :call <SID>file_man()<CR>
-noremap <silent><S-F8> :call <SID>terminal()<CR>
-noremap <silent><C-F8> :Ch7<CR>
+nor <silent><F8> :call <SID>file_man()<CR>
+nor <silent><S-F8> :call <SID>terminal()<CR>
+nor <silent><C-F8> :Ch7<CR>
 fun! s:file_man() "{{{
     if expand("%:p:h") != ""
         if has("win32")
@@ -551,7 +538,7 @@ command! Ch7 !chmod 755 '%:p'
 command! Ch6 !chmod 644 '%:p'
 "}}}
 "{{{ F9 ConqueTerm
-nnoremap <F9>  :ConqueTerm bash<CR>
+nno <F9>  :ConqueTerm bash<CR>
 let g:ConqueTerm_FastMode=1
 let g:ConqueTerm_TERM = 'xterm'
 let g:galaxy_statusline_blink=0
@@ -560,12 +547,12 @@ let g:ConqueTerm_SendFileKey = '<leader>cqf'
 let g:ConqueTerm_SendVisKey = '<leader>cqv'
 let g:ConqueTerm_PromptRegex = '^\((\w\+)\)\=[\w\+@[0-9A-Za-z_.-]\+ [0-9A-Za-z_./\~,:-]\+\$'
 "}}}
-nnoremap <F10>  :options<CR>
-nnoremap <F11> :call ToggleSketch()<CR>
+nno <F10>  :options<CR>
+nno <F11> :call ToggleSketch()<CR>
 "{{{ F12 Session
-nmap <F12> :Unite session<cr>
-nmap <S-F12> :call SaveSession()<CR>
-nmap <C-F12> :call SaveSession("name")<CR>
+nma <F12> :Unite session<cr>
+nma <S-F12> :call SaveSession()<CR>
+nma <C-F12> :call SaveSession("name")<CR>
 set sessionoptions=blank,curdir,help,tabpages,winpos,winsize,resize
 function! SaveSession(...) "{{{
     wall
@@ -599,37 +586,38 @@ endfunction "}}}
 let mapleader = " "
 let maplocalleader = ","
 
-noremap Q gq
+nno <leader> <Nop>
+vno <leader> <Nop>
 
-vnoremap . <Nop>
-vnoremap , <Nop>
-noremap s <Nop>
-noremap S <Nop>
+nor s <Nop>
+nor S <Nop>
 
-nnoremap <leader> <Nop>
-vnoremap <leader> <Nop>
+nor Q <Nop>
 
-nnoremap <m-x> <c-a>
 " similar with D
-nnoremap Y y$
+nno Y y$
 
-nnoremap > >>
-nnoremap < <<
-vnoremap > >gv
-vnoremap < <gv
+nno > >>
+nno < <<
+vno > >gv
+vno < <gv
+
+" last insert position ; last change position '. `.
+nno `, `^
+nno ', '^
 
 " repeat on every line
-vnoremap . :normal .<CR>
+vno . :normal .<CR>
 "}}}
 " Toggle Diff Mode "{{{
 set diffopt=filler,vertical,foldcolumn:1
-map <silent> <leader>dd :call <SID>toggle_diff()<CR>
-map <silent> <leader>DD :call <SID>diffthis()<CR>
 nmap <leader>da :1,$+1diffget<cr>
 nmap <leader>dc :1,.diffget<cr>
 nmap <leader>d$ :.,$+1diffget<cr>
+map <silent> <leader>dd :call <SID>toggle_diff()<CR>
+map <silent> <leader>DD :call <SID>diffthis()<CR>
 map <silent> <leader>do :call <SID>diffOrigin()<CR>
-fun! s:toggle_diff() "{{{
+function! s:toggle_diff() "{{{
     if &diff
         diffoff
         set foldmethod=marker
@@ -667,8 +655,8 @@ function! s:diffOrigin(...) "{{{
 endfunction "}}}
 "}}}
 "Toggle Folding And Foldmethod  "{{{
-" I want foldmarkers to be applied with space before a comment.
 function! s:set_fold_markers(lnum_st, lnum_end) "{{{
+" let foldmarkers to be applied with space before a comment.
     let markers = split(&foldmarker, ",")
 
     function! s:set_line(ln, marker)
@@ -703,13 +691,12 @@ function! MyFoldMarker(type, ...) "{{{
 endfunction "}}}
 nno <silent> zf :set opfunc=MyFoldMarker<CR>g@
 vno <silent> zf :<C-U>call MyFoldMarker(visualmode(), 1)<CR>zv
-nma <silent> <Leader>zz zf
-vma <silent> <Leader>zz zf
-nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
-vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
 nno <silent> zz @=(&foldlevel?'zM':'zR')<CR>
 nno <silent> zM @=(&foldlevel?'zM':'zR')<CR>
 nno <silent> zR @=(&foldlevel?'zM':'zR')<CR>
+nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
+nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
+vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
 
 nor <leader>fm :setl fdm=<C-R>= &fdm=='marker' ? 'indent'
             \ : &fdm=='indent' ? 'syntax'
@@ -747,23 +734,19 @@ nmap <leader>11 :filetype detect \| syntax enable <CR>
 nmap <leader>1m  :emenu Syntax.
 "}}}
 "Edit dotfiles "{{{
-map <silent><leader>vv :Split \| e ~/.vimrc<CR>
-map <silent><leader>vz :Split\| e ~/.zshrc<CR>
 map <leader>vr :so ~/.vimrc<CR>
-map <silent><leader>vdv :call <SID>diffOrigin("~/.vimrc","~/Documents/dotfiles/.vimrc")<cr>
 map <leader>vi :e ~/.vim/ <CR>
+map <silent><leader>vv :Split\|e ~/.vimrc<CR>
+map <silent><leader>vp :Split\|e ~/.pentadactylrc<CR>
+map <silent><leader>vsp :Split\|e ~/Dropbox/Vimwiki/Ref/ShuangPin.vwk<CR>
 if has("unix") "{{{ linux dotfiles
     map <silent><leader>vb :Split\|e ~/.bashrc<CR>
     map <silent><leader>vt :Split\|e ~/.tmux.conf<CR>
-    map <silent><leader>vp :Split\|e ~/.pentadactylrc<CR>
+    map <silent><leader>vz :Split\|e ~/.zshrc<CR>
     map <silent><leader>vc :Split\|e ~/.conkyrc<CR>
-    map <silent><leader>vsp :Split\|e ~/Documents/vimwiki/Ref/ShuangPin.vwk<CR>
-    map <silent><leader>vdw :call <SID>diffOrigin("~/.vimrc","/media/sda5/Documents/Variables/.vimrc")<cr>
-    map <silent><leader>vwv :Split\|e /media/sda5/Documents/Variables/.vimrc<CR>
-else
-    map <silent><leader>vsp :Split\|e d:/Documents/vimwiki/Ref/ShuangPin.vwk<CR>
-    map <silent><leader>vp :Split\| e ~/.pentadactylrc<CR>
 endif "}}}
+map <silent><leader>vdv :call <SID>diffOrigin('~/.vimrc',
+            \ '~/Documents/dotfiles/.vimrc')<cr>
 "}}}
 " 4.2.switch_window_and_buffer"{{{2
 set winheight=15 winwidth=35        " current window minimum col/line
@@ -776,15 +759,15 @@ nmap <C-W>4 :call <SID>place_vim()<CR>
 nmap <c-w>- :resize -10<CR>
 nmap <c-w>+ :resize +10<CR>
 
-for c in ['p','h','j','k','l','w']
+for c in ['p', 'h', 'j', 'k', 'l', 'w']
     exec 'nno <C-W>'.c.' <C-W>'.c.':call <SID>max_resize_win()<CR>'
 endfor
 nno <C-W>n <C-W>w:call<SID>max_resize_win()<CR>
 
 nno <C-W><c-r> <c-^>
 
-nma <silent> <C-W><c-q>    :close<CR>
-nma <silent> <C-W>q        :close<CR>
+nma <silent> <C-W><c-q>    :close<bar>call <SID>span_vert_win()<CR>
+nma <silent> <C-W>q        :close<bar>call <SID>span_vert_win()<CR>
 
 nno <silent> <C-W><C-V> :Split<cr>gf
 nno <silent> <C-W><C-S> :sp<CR>gf
@@ -875,9 +858,6 @@ ino <m-CR> <esc>o
 nor <S-CR> o<ESC>
 ino <s-CR> <esc>O
 
-" last insert position ; last change position '. `.
-nno `, `^
-nno ', '^
 
 map <scrollwheelup> 3k
 map <scrollwheeldown> 3j
@@ -906,13 +886,6 @@ ino <c-left> <c-o>B
 "}}}
  "}}}
 " 4.4.Edit_and_formatting "{{{2
-" Easy Editing Modify "{{{
-"change case <m-c>
-nmap gUu :s/\v<(.)(\w*)/\u\1\L\2/g\|nohl<CR>
-" capitalize word
-nmap gcw guiw~w
-
-"}}}
 "Quick Wrapping "{{{
 "VimwikiWord
 nnoremap <Leader>eW BvEc[[<C-r>"]]<ESC>`[
@@ -923,7 +896,6 @@ vnoremap <Leader>ep c<?php <C-r>" ?><ESC>`[
 "" html comment
 nnoremap <leader>e! ciw<!-- <C-r>" --><ESC>
 vnoremap <Leader>e! c<!-- <C-r>" --><ESC>`[
-
 "}}}
 " todo text "{{{
 nnoremap <leader>et :call <SID>add_text(" TODO:")<CR>
@@ -991,6 +963,9 @@ function! s:toggle_with_T() "{{{
 endfunction "}}}
 "}}}
 " line format  "{{{
+" CamelCase
+nmap gUu :s/\v<(.)(\w*)/\u\1\L\2/g\|nohl<CR>
+nmap gcw guiw~w
 "alignment of text
 nmap <leader>el :left<CR>
 nmap <leader>er :right<CR>
@@ -1012,6 +987,7 @@ nnoremap <leader>e*2 yyPVr*jyypVr*
 nnoremap <leader>e=1 yypVr=
 nnoremap <leader>e- yypVr-
 nnoremap <leader>e^ yypVr^
+nnoremap <leader>e/ yypVr/
 nnoremap <leader>e" yypVr"
 "}}}
 "close pairs [] {} ()"{{{
@@ -1049,7 +1025,6 @@ endfor
 
 ino {<CR>  {<CR>}<Esc>O<tab>
 ino {<c-e> {<c-o>mz<end><cr>}<c-o>`z<cr><tab>
-
 "}}}
 " 4.5.win_style_behave_settings (yank and pasting) "{{{2
 nor <C-S>		:update<CR>
@@ -1093,9 +1068,11 @@ set ignorecase smartcase
 set nowrapscan
 function! s:p(p,mode) "{{{
     if a:mode =~ "s"
-        let re_txt =  '/[]~.*$\'
+        let re_txt =  '[]*'
+    elseif a:mode =~ "e"
+        let re_txt =  '/~.$\'
     elseif a:mode =~ "r"
-        let re_txt =  '/&~\'
+        let re_txt =  '&'
     endif
     return escape(a:p,re_txt)
 endfunction "}}}
@@ -1127,11 +1104,22 @@ function! s:w(s,mode) "{{{
         return "silent grep! ".rs." %"
     endif
 endfunction "}}}
-function! s:wrap_scan_warn(e) "{{{
+nnoremap # g*
+nnoremap * g#
+nnoremap g# *
+nnoremap g* #
+vnoremap / <ESC>/<C-\>e<SID>p(<SID>r("v"),"e")<CR>
+vnoremap ? <ESC>?<C-\>e<SID>p(<SID>r("v"),"e")<CR>
+vnoremap # <ESC>/<C-\>e<SID>p(<SID>r("v"),"e")<CR><CR><C-G>
+vnoremap * <ESC>?<C-\>e<SID>p(<SID>r("v"),"e")<CR><CR><C-G>
+vnoremap n <ESC>/<C-\>e<SID>p(<SID>r("v"),"e")<CR><CR><C-G>
+vnoremap N <ESC>?<C-\>e<SID>p(<SID>r("v"),"e")<CR><CR><C-G>
+
+function! s:wrap_scan_warn(d) "{{{
     " show an warning message when hit end of file.
     try
-        if (a:e=='f' && v:searchforward == 1)
-                    \ || (a:e=='b' && v:searchforward == 0)
+        if (a:d=='f' && v:searchforward == 1)
+                    \ || (a:d=='b' && v:searchforward == 0)
             //
         else
             ??
@@ -1162,27 +1150,8 @@ function! s:wrap_scan_warn(e) "{{{
         echohl Normal
     endtry
 endfunction "}}}
-"{{{ search mapping
-nnoremap # g*
-nnoremap * g#
-nnoremap g# *
-nnoremap g* #
-vnoremap / <ESC>/<C-\>e<SID>p(<SID>r("v"),"s")<CR>
-vnoremap ? <ESC>?<C-\>e<SID>p(<SID>r("v"),"s")<CR>
-vnoremap # <ESC>/<C-\>e<SID>p(<SID>r("v"),"s")<CR>/<CR><C-G>
-vnoremap * <ESC>?<C-\>e<SID>p(<SID>r("v"),"s")<CR>/<CR><C-G>
-vnoremap n <ESC>/<C-\>e<SID>p(<SID>r("v"),"s")<CR>/<CR><C-G>
-vnoremap N <ESC>?<C-\>e<SID>p(<SID>r("v"),"s")<CR>/<CR><C-G>
 nnoremap <silent> n :call <SID>wrap_scan_warn('f')<CR>
 nnoremap <silent> N :call <SID>wrap_scan_warn('b')<CR>
-"}}}
-        if s:win_pos<=100
-            let s:win_pos = 550
-        elseif s:win_pos <= 600
-            let s:win_pos = 1050
-        else
-            let s:win_pos = 10
-        endif
 "5.Plugins_settings{{{1
 "Unite "{{{2
 let g:unite_winheight=10
@@ -1238,7 +1207,6 @@ inoremap <expr><space> pumvisible() ? "\<c-n>\<c-p>\<space>" : "\<space>"
 let g:neocomplcache_quick_match_table = {
             \'1' : 0, '2' : 1, '3' : 2, '4' : 3, '5' : 4, '6' : 5, '7' : 6, '8' : 7, '9' : 8, '0' : 9,
             \}
-" Plugin key-mappings.
 imap <expr><C-k>  pumvisible() ? neocomplcache#smart_close_popup() :
             \ "\<Plug>(neocomplcache_snippets_expand)"
 smap <expr><C-k>  pumvisible() ? neocomplcache#smart_close_popup() :
@@ -1287,6 +1255,8 @@ let g:neocomplcache_disable_caching_file_path_pattern="fuf"
 
 let g:neocomplcache_snippets_dir="~/.vim/my_snips/snippets_complete/"
 map <leader>se :sp\|NeoComplCacheEditSnippets<cr>
+map <silent><leader>sn :e ~/.vim/bundle/neocomplcache/autoload/
+            \neocomplcache/sources/snippets_complete/ <cr>
 map <leader>s- :sp\|e ~/.vim/my_snips/snippets_complete/_.snip <cr>
 map <leader>s_ :sp\|e ~/.vim/my_snips/snippets_complete/_.snip <cr>
 
@@ -1410,6 +1380,7 @@ nmap  <leader>gc :Gcommit<cr>
 nmap  <leader>gp :Git push<cr>
 nmap  <leader>gd :Gsdiff<CR>
 nmap  <leader>gb :Git branch -r<CR>
+nmap  <leader>gs :Git diff --stat<CR>
 nmap  <leader>gk :Git checkout
 nmap  <leader>gr :Git branch
 "Django "{{{2
@@ -1472,4 +1443,5 @@ nor <leader>cc :TComment<cr>
 nor \\ :TComment<cr>
 
 nma <leader>cA :ColorVsuball<CR>
-
+"}}}1
+" vim:tw=0 sw=4 ts=4 sts=4 fdm=marker fdls=0 :

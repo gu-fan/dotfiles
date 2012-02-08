@@ -20,7 +20,8 @@ map <F2> :bmarks<cr>
 
 map <space>vr :source ~/.pentadactylrc<cr>
 map sw :bmarks 
-nmap ; :
+noremap d ;
+noremap ; :
 "Moving
 noremap J 10j
 noremap K 10k
