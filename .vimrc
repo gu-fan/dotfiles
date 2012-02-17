@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
 "  Script: Rykka's Vimrc
 "  Author: Rykka <Rykka10(at)gmail.com>
-"  Update: 2012-02-14
+"  Update: 2012-02-17
 "  License: WTFPL v2.0
 """""""""""""""""""""""""""""""""""""""""""""""""
 " 1.Settings{{{1
@@ -251,7 +251,7 @@ function! s:last_update() "{{{
         endif
     endfor
 endfunction "}}}
-command! -nargs=0 LastUpdate call <SID>last_update()
+command! -nargs=0 -bar LastUpdate call <SID>last_update()
 
 function! s:Ack(args) "{{{
     let grepprg_bak=&grepprg
@@ -342,7 +342,6 @@ map <leader>vdv :call <SID>diff_this('~/.vimrc',
             \ '~/Documents/dotfiles/.vimrc')<cr>
 map <leader>vv  :Sp\|e ~/Dropbox/dotfiles/.vimrc<CR>
 if has("unix")
-    map <leader>vv  :Sp\|e ~/.vimrc<CR>
     map <silent><leader>vb :Sp\|e ~/.bashrc<CR>
     map <silent><leader>vt :Sp\|e ~/.tmux.conf<CR>
     map <silent><leader>vz :Sp\|e ~/.zshrc<CR>
