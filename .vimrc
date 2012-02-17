@@ -1,67 +1,56 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
 "  Script: Rykka's Vimrc
 "  Author: Rykka <Rykka10(at)gmail.com>
-"  Update: 2012-02-12
+"  Update: 2012-02-14
 "  License: WTFPL v2.0
 """""""""""""""""""""""""""""""""""""""""""""""""
-" 1.General_Settings{{{1
-"{{{2 1.0.Bundles
+" 1.Settings{{{1
+" 1.0.Bundles "{{{2 
 if !exists("g:bundles_loaded") || g:bundles_loaded != 1
+    let g:bundles_loaded = 1
     set nocompatible               " be iMproved
     filetype off                   " required!
     set rtp+=~/.vim/bundle/vundle/
     call vundle#rc()
 "{{{ Vundles
 Bundle 'gmarik/vundle'
-Bundle 'vim-scripts/sudo.vim'
-" Bundle 'vim-scripts/fcitx.vim'
-Bundle 'kien/ctrlp.vim'
-let g:ctrlp_dotfiles  = 0
-let g:ctrlp_max_depth = 10
 
-Bundle 'tpope/vim-fugitive'
+Bundle 'tomtom/tcomment_vim'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
-
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neocomplcache-snippets-complete'
-" Bundle 'Shougo/vimproc'
-" Bundle 'Shougo/vimshell'
-" let g:vimshell_user_prompt    = 'getcwd()'
-" let g:vimshell_prompt         = $USER.'> '
-" Bundle 'Shougo/unite.vim'
-" Bundle 'tungd/unite-session'
-
-Bundle 'mattn/calendar-vim'
+Bundle 'matchit.zip'
+Bundle "godlygeek/tabular"
 
 Bundle 'majutsushi/tagbar'
 let g:tagbar_compact          = 1
 let g:tagbar_width            = 30
-
-Bundle 'mattn/zencoding-vim'
-let g:user_zen_settings       = { 'indentation' : '    '}
-let g:user_zen_leader_key     = '<c-e>'
-let g:user_zen_expandabbr_key = '<c-e>e'    "e
-let g:user_zen_expandword_key = '<C-E>E'    "e
-let g:user_zen_next_key       = '<c-e>j'    "n
-let g:user_zen_prev_key       = '<c-e>k'    "p
-let g:user_zen_removetag_key  = '<c-e>d'    "k
-
 Bundle 'sjl/gundo.vim'
 let g:gundo_preview_bottom    = 1
 let g:gundo_width             = 30
 let g:gundo_right             = 1
 
-Bundle 'tomtom/tcomment_vim'
+Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplcache-snippets-complete'
 
-" Bundle 'scrooloose/nerdtree'
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_dotfiles  = 0
+let g:ctrlp_max_depth = 10
 
-Bundle 'matchit.zip'
-Bundle "godlygeek/tabular"
+Bundle 'vim-scripts/sudo.vim'
+Bundle 'tpope/vim-fugitive'
 
+Bundle 'mattn/zencoding-vim'
+let g:user_zen_settings       = { 'indentation' : '    '}
+let g:user_zen_leader_key     = '<c-e>'
+let g:user_zen_expandabbr_key = '<c-e>e'    "e
+let g:user_zen_expandword_key = '<e-e>E'    "e
+let g:user_zen_next_key       = '<c-e>j'    "n
+let g:user_zen_prev_key       = '<c-e>k'    "p
+let g:user_zen_removetag_key  = '<c-e>d'    "k
 Bundle 'lilydjwg/csspretty.vim'
-Bundle 'vim-scripts/sketch.vim'
 Bundle 'kchmck/vim-coffee-script'
+
+Bundle 'mattn/calendar-vim'
 
 Bundle 'fs111/pydoc.vim'
 Bundle 'ode79/pythonfolding'
@@ -75,7 +64,6 @@ Bundle 'Rykka/lastbuf.vim'
     set nocompatible
     syntax on
     filetype plugin indent on     " required!
-    let g:bundles_loaded = 1
 endif
 "1.1.Basic "{{{2
 let s:win_col       = 80
@@ -91,8 +79,7 @@ function! s:auto_mkdir(dir, force) "{{{
 endfunction "}}}
 
 set history=255 viminfo='100,\"30,:30,s10,!
-set autoread
-" set autowrite
+set autoread noautowrite
 
 set backup backupdir=~/.vim_backups/
 call s:auto_mkdir(expand('~/.vim_backups'),1)
@@ -120,8 +107,7 @@ set completeopt=menuone
 set pumheight=10            " Keep a small completion window
 
 set isfname-==
-set iskeyword+=_,$,@
-set iskeyword-=#
+set iskeyword+=_,$,@ iskeyword-=#
 set comments=n://,fb:-,n:>,fb:*
 set formatlistpat="^\s*[(\d)*#-]\+[\]:.)}\t ]\s*"
 set formatoptions+=1on2mMq
@@ -152,12 +138,18 @@ if has("multi_byte")
     set termencoding=utf-8
     set fileencodings=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936,latin-1
 endif
+if has("win32") || has("win64")
+    source $VIMRUNTIME/delmenu.vim
+    set langmenu=zh_CN.utf-8
+    source $VIMRUNTIME/menu.vim
+    language messages zh_CN.utf-8
+endif
 " 1.3.UI fonts colors "{{{2
 " Guifont
 if has("gui_running")
     if has ("win32") || has ("win64")
-        set guifont=Dejavu_Sans_Mono:h13:cANSI
         " set gfw=Microsoft_YaHei:h13:cGB2312
+        set guifont=Dejavu_Sans_Mono:h13:cANSI
         set gfw=Wenquanyi_Micro_Hei_Mono:h13:cANSI
     elseif has("gui_mac")
         set guifont=Monaco:h13
@@ -196,10 +188,6 @@ set foldlevel=0 foldlevelstart=0
 set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
 set foldclose=
 
-set noequalalways
-set splitbelow splitright
-set scrolloff=3 scrolljump=1
-
 set mouse=a                 " Enable terminal mouse in all mode
 set mousemodel=extend mousehide
 
@@ -215,13 +203,79 @@ if v:version >= 703 "{{{
     set conceallevel=1                  " always SHOW conceal text
     set concealcursor=vn              " n Normal v Visual i Insert c Command
 endif "}}}
-" 2.AutoCmd_Group{{{1
+" 2.Commands and Autocmds {{{1
+" 3.1.Commands "{{{2
+command! -nargs=0 Write exec "w sudo:% "
+command! -nargs=0 Mkdir call <SID>auto_mkdir(expand('%:p:h'),0)
+
+function! s:delete(name) "{{{
+    let f = a:name
+    if input('Delete '.f.' ?(y/N)') =~? '^y\%[es]$'
+        if !delete(f)
+            echom f."deleted successfully!"
+            Explore
+        else
+            echom f."delete faiure!"
+        endif
+    endif
+endfunction "}}}
+function! s:rename(name) "{{{
+    let f = expand('%:p')
+    exec "saveas ". a:name
+    call s:delete(f)
+endfunction "}}}
+command! -nargs=0 Delete call <SID>delete(expand("%:p"))
+command! -nargs=1 Rename call <SID>rename(<q-args>)
+
+command! CopyName let @+ = expand('%:p:t')
+command! CopyPath let @+ = expand('%:p:h')
+command! CopyFull let @+ = expand('%:p')
+
+command! TrimWhite %s/\s\+$//
+command! TrimCtrlM %s//\r/
+
+command! Ch7 !chmod 755 '%:p'
+command! Ch6 !chmod 644 '%:p'
+
+function! s:last_update() "{{{
+    let rx_str_upd='\%(Change\|Update\|Updated\|Modified\)'
+    for i in range(1,20)
+        let line = getline(i)
+        if line =~# rx_str_upd
+            let nline = substitute(line, '\(^.*'.rx_str_upd.':\s*\).*$',
+                        \ '\1'.strftime("%Y-%m-%d"), '')
+            if line != nline
+                call setline(i, nline)
+            endif
+            return
+        endif
+    endfor
+endfunction "}}}
+command! -nargs=0 LastUpdate call <SID>last_update()
+
+function! s:Ack(args) "{{{
+    let grepprg_bak=&grepprg
+    set grepprg=ack\ -H\ --nocolor\ --nogroup
+    silent! execute "grep! " . a:args
+    let &grepprg=grepprg_bak
+    botright copen
+    redraw!
+endfunction "}}}
+command! -nargs=* -complete=file Ack call <SID>Ack(<q-args>)
+
+" 3.2.Insert Abbrevation "{{{2 
+iab lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.
+" 3.3.Digraphs "{{{2 
+" v- ǖ    v' ǘ    v< ǚ    v` ǜ
+digraphs v- 470 v' 472 v< 474 v` 476
+" redefine DOWN-ARROW ↓ to '|v' which was '-v'
+digraphs \|v 8595 \|^ 8593
+" 3.4.Autocmd_Group{{{2
 aug au_GuiEnter "{{{
     au!
     au GuiEnter * set t_vb=
     exe "au GuiEnter * winpos ".s:win_pos." 0"
     exe "au GuiEnter * winsize ".s:win_col." 48"
-    au GuiEnter * silent! normal! V<ctrl-c>
 aug END "}}}
 aug au_Vimrc "{{{
     au!
@@ -247,252 +301,18 @@ aug au_Filetypes "{{{
 aug END "}}}
 aug au_Htmls "{{{
     au!
-    au Filetype php,html,xhtml,xml set shiftwidth=4 softtabstop=4
-    au Filetype php,html,xhtml,xml set foldmethod=indent
+    au Filetype php,html,xhtml,xml setl shiftwidth=4 softtabstop=4
+    au Filetype php,html,xhtml,xml setl foldmethod=indent
 aug END "}}}
 aug au_Plugins "{{{
     au!
     au colorscheme *.vwk call s:vimwiki_my_set()
-    au FileType vimwiki  call s:vimwiki_my_set()
+    au FileType,Syntax vimwiki  call s:vimwiki_my_set()
     au FileType netrw    call s:netrw_my_set()
-    au InsertLeave * call Yong2en()
-    au InsertEnter * call Yong2zh()
 aug END "}}}
-" 3.Commands_And_Abbreviations {{{1
-" Commands "{{{2
-command! -nargs=0 Write exec "w sudo:% "
-command! -nargs=0 Mkdir call <SID>auto_mkdir(expand('%:p:h'),0)
-
-function! s:delete_this() "{{{
-    let f = expand('%:p')
-    if input('Delete '.f.' ?(y/N)') =~? '^y\%[es]$'
-        if !delete(f)
-            echom f."deleted successfully!"
-            Explore
-        else
-            echom f."delete faiure!"
-        endif
-    endif
-endfunction "}}}
-command! Delete call <SID>delete_this()
-
-function! s:rename(name) "{{{
-    let f = expand('%:p')
-    saveas a:name
-    if input('Delete '.f.' ?(y/N)') =~? '^y\%[es]$'
-        if !delete(f)
-            echom f."deleted successfully!"
-            Explore
-        else
-            echom f."delete faiure!"
-        endif
-    endif
-endfunction "}}}
-command! -nargs=1 Rename call <SID>rename(<q-args>)
-
-command! CopyName let @+ = expand('%:p:t')
-command! CopyPath let @+ = expand('%:p:h')
-command! CopyFull let @+ = expand('%:p')
-
-command! TrimWhite %s/\s\+$//
-command! TrimCtrlM %s//\r/
-
-function! s:last_update() "{{{
-    let rx_str_upd='\%(Change\|Update\|Updated\|Modified\)'
-    for i in range(1,30)
-        let line = getline(i)
-        if line =~# rx_str_upd
-            let nline = substitute(line, '\(^.*'.rx_str_upd.':\s*\).*$',
-                        \ '\1'.strftime("%Y-%m-%d"), '')
-            if line != nline
-                call setline(i, nline)
-            endif
-            return
-        endif
-    endfor
-endfunction "}}}
-command! -nargs=0 LastUpdate call <SID>last_update()
-
-function! Ack(args) "{{{
-    let grepprg_bak=&grepprg
-    set grepprg=ack\ -H\ --nocolor\ --nogroup
-    silent! execute "grep! " . a:args
-    botright copen
-    let &grepprg=grepprg_bak
-    redraw!
-endfunction "}}}
-command! -nargs=* -complete=file Ack call Ack(<q-args>)
-
-command! Gcc !gcc `pkg-config --cflags --libs gtk+-2.0` '%:p' -o %:t:r.o -lm
-function! s:gco() "{{{
-    !gcc `pkg-config --cflags --libs gtk+-2.0`  -c -fpic % -o %:t:r.o
-    !gcc -shared -lc  -o %:t:r.so  %:t:r.o
-endfunction "}}}
-command! Gco call <SID>gco()
-function! s:libc_it(type,func,para) "{{{
-    let file=expand('%:p:r').".so"
-    call s:gco()
-    if a:type=="str"
-        echo libcall(file,a:func,a:para)
-    else
-        echo libcallnr(file,a:func,a:para)
-    endif
-endfunction "}}}
-command! -nargs=1 Lbs call <SID>libc_it("str",<f-args>)
-command! -nargs=1 Lbi call <SID>libc_it("int",<f-args>)
-command! Gcld !gcc -o %:t:r % -ldl
-command! Gpp !g++ `pkg-config --cflags --libs gtk+-2.0` -c -fPIC % -o %:t:r.o
-command! Gpso !g++ -shared -Wl,-soname,%:t:r.so -o  %:t:r.so  %:t:r.o
-"{{{2 Insert Abbrevation
-iab lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.
-"{{{2 Digraphs
-" v- ǖ    v' ǘ    v< ǚ    v` ǜ
-digraphs v- 470 v' 472 v< 474 v` 476
-" redefine DOWN-ARROW ↓ to '|v' which was '-v'
-digraphs \|v 8595 \|^ 8593
-" 4.Key_Mapping_General{{{1
-" 4.0.F1-F12 "{{{2
-"{{{3 F1 Help
-set keywordprg=":help"
-set helplang=en,cn
-cabbrev H helpg
-nor   <F1>     K
-nno   <S-F1>   :Pydoc <C-R>=expand("<cword>")<CR><CR>
-"{{{3 F2 Replace @/
-nno   <F2>     :%<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
-vno   <F2>     :<C-R>=<SID>w(@/,"r")<CR><Left><Left><Left>
-nno   <S-F2>   :%<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
-vno   <S-F2>   :<C-R>=<SID>w(@/,"br")<CR><Left><Left><Left>
-"{{{3 F3 Ack-grep http://better-than-grep.com
-nor   <F3>     :Ack <C-R>/ %<CR>
-vno   <F3>     y:Ack <C-R>/ %<CR>
-nor   <S-F3>   :Ack <C-R>/<CR>
-vno   <S-F3>   y:Ack <C-R>/<CR>
-              
-"{{{3 F4 Folder
-nno   <F4>     :Vex<CR>
-nno   <S-F4>   :CtrlP<CR>
-"{{{3 F5 Execute
-nno <silent> <F5> :call <SID>exe("n")<CR>
-vno <silent> <F5> :call <SID>exe("v")<CR>
-function! s:exe(mode) range "{{{
-    update
-
-    if has("unix")
-        let browser = "firefox "
-        let runner="xdg-open "
-        let err_log=" 2>&1 | tee /tmp/.vim_exe.tmp"
-        let term = "gnome-terminal "
-    else
-        let browser ="firefox.lnk "
-        let runner="start "
-        let err_log=" "
-        let term = "cmd "
-    endif
-    let bang="!"
-
-    if !exists("&syn")
-        exec bang.runner.file
-        return
-    else
-        let syn=&syn
-    endif
-
-    if a:mode=="n"
-        let file=' "'.expand('%:p').'"'
-        if syn=="python"
-            let L=getline(1)
-            if     L=~'python3' | exec bang."python3 -d ".file.err_log
-            elsei  L=~'pypy'    | exec bang."pypy -d ".file.err_log
-            else                | exec bang."python2 -d ".file.err_log
-            endif
-        elsei syn=="ruby"       | exec bang."ruby -d ".file.err_log
-        elsei syn=="perl"       | exec bang."perl -D ".file.err_log
-        elsei syn=='vim'        | exec "so %"
-        elsei syn=='bat'      | exec "w !cmd"
-        elsei syn=~'^\(sh\|expect\|bash\)$'     | exec "w !sh"
-        elsei syn=~'html'       | exec bang.browser.file
-        elsei syn=~'^coffee$'   | exec "CoffeeRun"
-        elsei syn=="vimwiki"    | exec "Vimwiki2HTMLBrowse"
-        else                    | exec bang.runner.file
-        endif
-    elseif a:mode=="v"
-        let txt_lst=getline(a:firstline,a:lastline)
-        if syn=="python"    | let l_cmd="py "
-        elseif syn=="ruby"  | let l_cmd="ruby "
-        elseif syn=='vim'   | let l_cmd=""
-        elseif syn=~'^\(sh\|expect\|bash\|bat\)$'   | let l_cmd="!"
-        endif
-        for line in txt_lst
-            exe l_cmd.line
-        endfor
-    endif
-endfunction "}}}
-nno   <C-F5> :Gcc<CR>
-"}}}3
-nor   <F6>   :TagbarToggle<CR>
-nor   <F7>   :GundoToggle<CR>
-"{{{3 F8 File Manager / Terminal
-nor   <silent><F8>     :call <SID>file_man()<CR>
-nor   <silent><S-F8>   :call <SID>terminal()<CR>
-nor   <silent><C-F8>   :Ch7<CR>
-fun! s:file_man() "{{{
-    if expand("%:p:h") != ""
-        if has("win32")
-            exec "!start explorer '%:p:h'"
-        else
-            "exec "!gnome-commander -l '%:p:h'"
-            exec "!nautilus '%:p:h'"
-        endif
-    endif
-endf "}}}
-fun! s:terminal() "{{{
-    if has("win32")
-        exec "!start cmd '%:p:h'"
-        " exec "! @d:\Dev\MSYS\bin\rxvt -tn msys -sl 3000 -fn Fixedsys -fg white -bg black -sr -e d:\Dev\MSYS\bin\bash.exe --login -i"
-
-    else
-        " exec "!xterm -hold -e 'cd %:p:h && /bin/bash' &"
-        exec "!gnome-terminal --working-directory=%:p:h &"
-    endif
-endf "}}}
-command! Ch7 !chmod 755 '%:p'
-command! Ch6 !chmod 644 '%:p'
-"{{{3 F9 ConqueTerm
-nno   <F9>    :ConqueTerm bash<CR>
-"}}}3
-nor   <F10>   :options<CR>
-nor   <F11>   :call ToggleSketch()<CR>
-"{{{3 F12 Session
-nma <F12> :Hex! ~/.vim/sessions<CR>
-nma <S-F12> :call SaveSession()<CR>
-nma <C-F12> :call SaveSession("name")<CR>
-set sessionoptions=blank,curdir,help,tabpages,winpos,winsize,resize
-function! SaveSession(...) "{{{
-    wall
-    let ses_dir = expand('~/.vim/sessions')
-    call s:auto_mkdir(ses_dir,1)
-    let time=strftime("%y%m%d_%H%M%S")
-    if exists("a:1") && a:1=="name"
-        if input("Please Input your session name:")
-            let sesname = time."_".ses
-        else
-            echo "Invalid Input name. Stop!"
-            return
-        endif
-    else
-        let sesname = time
-    endif
-
-    try
-        exe "mksession! "."~/.vim/sessions/".sesname
-        echom "mks success! session file : ".sesname
-    catch /^vim\%((\a\+)\)\=:/
-        echoe "mks failure! error: " .v:exception
-    endtry
-endfunction "}}}
-" 4.1.Leader_Mapping{{{2
-"Basic "{{{
+" 3.Mappings "{{{1
+" 3.1.Leader_Mapping{{{2
+"Single Key "{{{
 nno   <leader>   <Nop>
 vno   <leader>   <Nop>
 nno   s          <Nop>
@@ -505,18 +325,33 @@ nno   <          <<
 vno   >          >gv
 vno   <          <gv
 " last changed position '.  `.
-" last inserted position
+" last inserted position '^ `^
 nno   `,         `^
 nno   ',         '^
 
 " repeat on every line
 vno   .          :normal .<CR>
 nno <rightmouse><leftmouse> <c-o>
+ino <rightmouse><leftmouse> <c-o>
 "}}}
-" Toggle Diff Mode "{{{
+"Dotfiles "{{{
+map <leader>vr  :so ~/.vimrc<CR>
+map <leader>vp  :Sp\|e ~/.pentadactylrc<CR>
+map <leader>vsp :Sp\|e ~/Dropbox/Vimwiki/Ref/ShuangPin.vwk<CR>
+map <leader>vdv :call <SID>diff_this('~/.vimrc',
+            \ '~/Documents/dotfiles/.vimrc')<cr>
+map <leader>vv  :Sp\|e ~/Dropbox/dotfiles/.vimrc<CR>
+if has("unix")
+    map <leader>vv  :Sp\|e ~/.vimrc<CR>
+    map <silent><leader>vb :Sp\|e ~/.bashrc<CR>
+    map <silent><leader>vt :Sp\|e ~/.tmux.conf<CR>
+    map <silent><leader>vz :Sp\|e ~/.zshrc<CR>
+    map <silent><leader>vc :Sp\|e ~/.conkyrc<CR>
+endif "}}}
+" Toggle Diff "{{{
 set diffopt=filler,vertical,foldcolumn:1
 nma <leader>da :1,$+1diffget<cr>
-nma <leader>dc :1,.diffget<cr>
+nma <leader>d1 :1,.diffget<cr>
 nma <leader>d$ :.,$+1diffget<cr>
 map <silent> <leader>dd :call <SID>toggle_diff()<CR>
 map <silent> <leader>do :call <SID>diff_this()<CR>
@@ -547,7 +382,16 @@ function! s:diff_this(...) "{{{
     diffthis | wincmd p | diffthis
 endfunction "}}}
 "}}}
-"Toggle Folding And Foldmethod  "{{{
+"Toggle Fold "{{{
+nno <silent> zf :set opfunc=MyFoldMarker<CR>g@
+vno <silent> zf :<C-U>call MyFoldMarker(visualmode(), 1)<CR>zv
+nno <silent> zz @=(&foldlevel?'zM':'zR')<CR>
+nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
+nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
+vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
+nor <silent> <leader>fm :setl fdm=<C-R>=&fdm=~'ke'?'indent'
+            \:&fdm=~'in'?'syntax'
+            \:&fdm=='sy'?'expr':'marker'<CR><BAR>ec &fdm<CR>
 function! s:set_fold_markers(lnum_st, lnum_end) "{{{
 " let foldmarkers to be applied with space before a comment.
     let markers = split(&foldmarker, ",")
@@ -582,35 +426,19 @@ function! MyFoldMarker(type, ...) "{{{
     let &selection = sel_save
     let @@ = reg_save
 endfunction "}}}
-nno <silent> zf :set opfunc=MyFoldMarker<CR>g@
-vno <silent> zf :<C-U>call MyFoldMarker(visualmode(), 1)<CR>zv
-nno <silent> zz @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> zM @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> zR @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
-vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
-
-nor <silent><leader>fm :setl fdm=<C-R>=&fdm=~'ke'?'indent'
-            \:&fdm=~'in'?'syntax'
-            \:&fdm=='sy'?'expr':'marker'<CR><BAR>ec &fdm<CR>
 "}}}
-"Misc Option Toggle "{{{
-set listchars=tab:┆\ ,trail:┄,extends:>,precedes:<
+"Toggle Option "{{{
+set listchars=tab:\|-,trail:-,extends:>,precedes:<
 nor <Leader>li :setl list! list?<CR>
 
 nor <leader>nn :setl <c-r>=&nu?'rnu':&rnu?'nornu':'nu'<CR><CR>
 
-set wrap
-set linebreak
 let &showbreak='> '         " wrap text break string
+set wrap linebreak
 set display=lastline        " show wraping text even it's not complete show
-" backspace and cursor keys wrap to previous/next line
-set backspace=indent,eol,start whichwrap+=<,>,[,]
 nor <leader>wp :setl wrap! wrap?<CR>
 
-set spelllang=en
-set nospell
+set spelllang=en nospell
 nor <leader>sp :setl spell!<CR>:echo "Spell:"
             \.<c-r>=&spell? "'ON'" : "'OFF'" <CR><CR>
 
@@ -620,68 +448,44 @@ nor <m-1> :set <C-R>=&go=~#'m' ? 'go-=m' : 'go+=m'<CR><CR>
 nor <m-2> :set <C-R>=&go=~#'r' ? 'go-=Rr': 'go+=Rr'<CR><CR>
 nor <m-3> :set <C-R>=&go=~#'T' ? 'go-=T' : 'go+=T'<CR><CR>
 
-nmap <leader>11 :filetype detect \| syntax enable <CR>
-nmap <leader>1m  :emenu Syntax.
-nmap <silent><leader>1s :call <SID>SynStack()<CR>
+nma <leader>11 :filetype detect \| syntax enable <CR>
+nma <leader>1m  :emenu Syntax.
+nma <silent><leader>1s :call <SID>SynStack()<CR>
 function! <SID>SynStack() "{{{
     if exists("*synstack")
         for id in synstack(line("."), col("."))
             echon " ".synIDattr(id, "name")
             exe "echohl ".synIDattr(id, "name")
-            echon " ".synIDattr(synIDtrans(id), "fg")
+            echon "[".synIDattr(synIDtrans(id), "name")."]"
             echohl None
         endfor
     endif
 endfunc "}}}
 "}}}
-"Edit dotfiles "{{{
-map <leader>vr  :so ~/.vimrc<CR>
-map <leader>vv  :Sp\|e ~/.vimrc<CR>
-map <leader>vp  :Sp\|e ~/.pentadactylrc<CR>
-map <leader>vsp :Sp\|e ~/Dropbox/Vimwiki/Ref/ShuangPin.vwk<CR>
-map <leader>vdv :call <SID>diff_this('~/.vimrc',
-            \ '~/Documents/dotfiles/.vimrc')<cr>
-if has("unix")
-    map <silent><leader>vb :Sp\|e ~/.bashrc<CR>
-    map <silent><leader>vt :Sp\|e ~/.tmux.conf<CR>
-    map <silent><leader>vz :Sp\|e ~/.zshrc<CR>
-    map <silent><leader>vc :Sp\|e ~/.conkyrc<CR>
-endif "}}}
-" 4.2.switch_window_and_buffer"{{{2
-set winheight=15 winwidth=35        " current window minimum col/line
+" 3.2.Switch Window "{{{2
+set winheight=12 winwidth=25        " current window minimum width/height
 set winminwidth=0 winminheight=0
-nmap <silent><C-W>1 :call <SID>max_resize_win()<CR>
-nmap <silent><C-W>2 :call <SID>span_vert_win(0)<CR><C-W>=
-nmap <silent><C-W>3 :call <SID>fold_vert_win(1)<CR>
-nmap <silent><C-W>4 :call <SID>place_vim()<CR>
+set noequalalways splitbelow splitright
+nma <silent><C-W>1 :call <SID>max_resize_win()<CR>
+nma <silent><C-W>2 :call <SID>span_vert_win(0)<CR><C-W>=
+nma <silent><C-W>3 :call <SID>fold_vert_win(1)<CR>
+nma <silent><C-W>4 :call <SID>place_vim()<CR>
 
-nmap <c-w>- :resize -10<CR>
-nmap <c-w>+ :resize +10<CR>
-
-for c in ['p', 'h', 'j', 'k', 'l', 'w']
-    exec 'nno <C-W>'.c.' <C-W>'.c.':call <SID>max_resize_win()<CR>'
-endfor
-nno <C-W>n <C-W>w:call<SID>max_resize_win()<CR>
-
-nno <C-W><c-r> <c-^>
+nno <C-W>n <C-W>w
+nno <C-W>N <C-W>n
 
 nma <silent><C-W><c-q> :close<bar>call <SID>fold_vert_win(0)<CR>
 nma <silent><C-W>q     :close<bar>call <SID>fold_vert_win(0)<CR>
 
-nno <silent><C-W><C-V> :Split<cr>gf
-nno <silent><C-W><C-S> :sp<CR>gf
-nno <silent><C-W><C-T> :tab sp<CR>gf
-nno <silent><C-W><C-F> :sp\|e <cfile><CR>
+nno <C-W><C-V> :Sp<cr>gf
+nno <C-W><C-S> :sp<CR>gf
+nno <C-W><C-T> :tab sp<CR>gf
+nno <C-W><C-F> :sp\|e <cfile><CR>
 
-map <C-Up>      :tabclose<CR>
-map <C-Down>    :tabnew<CR>
-map <C-Right>   :tabnext<CR>
-map <C-Left>    :tabprev<CR>
-map <S-Up>      :close<CR>
-map <S-Down>    :new<CR>
-map <S-Right>   :bn<CR>
-map <S-Left>    :bp<CR>
-
+map <C-Up>      :tabclose<CR> | map <S-Up>      :close<CR>
+map <C-Down>    :tabnew<CR>   | map <S-Down>    :new<CR>
+map <C-Right>   :tabnext<CR>  | map <S-Right>   :wincmd w<CR>
+map <C-Left>    :tabprev<CR>  | map <S-Left>    :wincmd p<CR>
 function! s:is_win_vert() "{{{
     return winwidth(0) < &columns
 endfunction "}}}
@@ -726,7 +530,8 @@ function! s:split() "{{{
 endfun
 "}}}
 command! -bar Split call <SID>split()
-" 4.3.HJKL_  "{{{2
+" 3.3.HJKL "{{{2
+set scrolloff=3 scrolljump=1
 nno   H   h
 nno   J   j
 nno   K   k
@@ -734,32 +539,27 @@ nno   L   l
 
 nno   j   gj
 nno   k   gk
-" visual mode but no select mode.
+" xno: visual mode exclude select mode.
 xno   j   gj
 xno   k   gk
 
 nno   <silent>   <c-h>   K
-nno   <silent>   <c-l>   :let   @/=''\|redraw!<CR>
+nno   <silent>   <c-l>   :let @/=''\|redraw!<CR>
 nno   <silent>   <c-j>   J
 ino   <silent>   <c-j>   <c-k>
-" nno   <silent>   <c-k>   J
 
-" digraph input
-ino   <c-f>    <c-K>
-cno   <c-f>    <c-K>
-
+vno   <c-CR>   gq
 nno   <c-CR>   kJ
 ino   <c-CR>   <esc>kJi
-vno   <C-CR>   gq
 nno   <m-CR>   o
 ino   <m-CR>   <esc>o
-nor   <S-CR>   o<ESC>
+nor   <s-CR>   o<ESC>
 ino   <s-CR>   <esc>O
 
 map   <ScrollWheelUp>       3k
 map   <ScrollWheelDown>     3j
-map   <S-ScrollWheelUp>     30k
-map   <S-ScrollWheelDown>   30j
+map   <S-ScrollWheelUp>     <c-b>
+map   <S-ScrollWheelDown>   <c-f>
 nno   <C-ScrollWheelDown>   >>
 nno   <C-ScrollWheelUp>     <<
 vno   <C-ScrollWheelDown>   >gv
@@ -781,76 +581,71 @@ ino <c-e><c-e> <esc>$a
 
 ino <c-left> <c-o>B
 "}}}
-" 4.4.Edit_and_formatting "{{{2
-"wrap text "{{{
+" 3.4.Editing_"{{{2
+" Wrap text "{{{
 "VimwikiWord
-nnoremap <Leader>eW BvEc[[<C-r>"]]<ESC>`[
-nnoremap <Leader>ew bvec[[<C-r>"]]<ESC>`[
+nno <Leader>eW BvEc[[<C-r>"]]<ESC>`[
+nno <Leader>ew bvec[[<C-r>"]]<ESC>`[
 " php
-nnoremap <leader>ep ciw<?php <C-r>" ?><ESC>
-vnoremap <Leader>ep c<?php <C-r>" ?><ESC>`[
+nno <leader>ep ciw<?php <C-r>" ?><ESC>
+vno <Leader>ep c<?php <C-r>" ?><ESC>`[
 "" html comment
-nnoremap <leader>e! ciw<!-- <C-r>" --><ESC>
-vnoremap <Leader>e! c<!-- <C-r>" --><ESC>`[
+nno <leader>e! ciw<!-- <C-r>" --><ESC>
+vno <Leader>e! c<!-- <C-r>" --><ESC>`[
 "}}}
-" todo text "{{{
-nnoremap <leader>et :call <SID>add_text(" TODO:")<CR>
-nnoremap <leader>ef :call <SID>add_text("FIXME:")<CR>
-nnoremap <leader>ex :call <SID>add_text("  XXX:")<CR>
-nnoremap <leader>ee :call <SID>toggle_with_T()<CR>
-let s:rx_toggle = {
-            \ 'todo' :['TODO',   'DONE'],
-            \ 'fix'  :['FIXME',  'FIXED'],
-            \ 'xxx'  :['XXX',    'WORKRND'],
-            \ 'note' :['NOTE',   'WARNING', 'CAUTION'],
-            \}
+" Todo text "{{{
+nno <leader>et :call <SID>add_text(" TODO:")<CR>
+nno <leader>ef :call <SID>add_text("FIXME:")<CR>
+nno <leader>ex :call <SID>add_text("  XXX:")<CR>
+nno <leader>ee :call <SID>toggle_with_T()<CR>
+let s:rx_toggle = [['TODO',   'DONE'],
+                \ ['FIXME',  'FIXED'],
+                \ ['XXX',    'WORKRND'],
+                \ ['NOTE',   'WARNING', 'CAUTION'],
+                \ ]
 let s:rx_timestamp = '\(\d\{6}\|\d\{4}-\d\{2}-\d\{2}\)'
 let s:fm_timestamp = "%Y-%m-%d"
-function! s:is_whiteline() "{{{
-    return getline('.')=~'^\s*$'
-endfunction "}}}
 function! s:add_text(text) "{{{
     if &syn=="vimwiki"
         let cmnt = a:text
     else
         let cmnt = substitute(&commentstring, '%s', ' '.a:text, "")
     endif
-    if s:is_whiteline()
-        exec 'normal I' . cmnt
+    if getline('.')=~'^\s*$'
+        exec 'normal! I' . cmnt
     else
         let fo_bak=&fo
         set fo=2
-        exec 'normal o' . cmnt
+        exec 'normal! o' . cmnt
         let &fo=fo_bak
     endif
 endfunction "}}}
 function! s:toggle_with_T() "{{{
     let line = getline('.')
-    for [rx,rx_list] in items(s:rx_toggle)
+    for rx_list in s:rx_toggle
         for i in range(len(rx_list))
-            if line =~# rx_list[i].':\='
-                let time = strftime(s:fm_timestamp)
+            let rx_lst = rx_list[i].':\='
+            if line =~# rx_lst "{{{
+                let r = i+1
                 if i == len(rx_list)-1
                     let r = 0
                     " remove all timestamp as became list[0]
-                    if line =~# rx_list[i].':\='.' '.s:rx_timestamp
+                    if line =~# rx_lst.' '.s:rx_timestamp
                         let line = substitute(line,' '.s:rx_timestamp,'','')
                     endif
                 elseif i == len(rx_list)-2
-                    let r = i+1
+                    let time = strftime(s:fm_timestamp)
                     " add timestamp as became list[-1]
-                    if line =~# rx_list[i].':\='.' '.s:rx_timestamp
+                    if line =~# rx_lst.' '.s:rx_timestamp
                         let line = substitute(line,s:rx_timestamp, time,'')
                     else
-                        let line = substitute(line,'\C'.rx_list[i].':\=', '& '.time,'')
+                        let line = substitute(line,'\C'.rx_lst, '& '.time,'')
                     endif
-                else
-                    let r = i+1
                 endif
                 let line = substitute(line,'\C'.rx_list[i],rx_list[r],'')
                 break
                 break
-            endif
+            endif "}}}
         endfor
     endfor
     if line !=# getline('.')
@@ -858,14 +653,14 @@ function! s:toggle_with_T() "{{{
     endif
 endfunction "}}}
 "}}}
-" line format  "{{{
+" Line format  "{{{
 nmap gUu :s/\v<(.)(\w*)/\u\1\L\2/g\|nohl<CR>
 nmap gcw guiw~w
 
 nno <leader>e=2 yyPVr=jyypVr=
 nno <leader>e*2 yyPVr*jyypVr*
 "}}}
-"close pairs [] {} ()"{{{
+" Pairs "{{{
 vno [p <esc>`>a]<esc>`<i[<esc>lv`>l
 vno {{ <esc>`>a}<esc>`<i{<esc>lv`>l
 vno (( <esc>`>a)<esc>`<i(<esc>lv`>l
@@ -903,47 +698,36 @@ endfor
 ino {<CR>  {<CR>}<Esc>O<tab>
 ino {<c-e> {<c-o>mz<end><cr>}<c-o>`z<cr><tab>
 "}}}
-" 4.5.win_style_behave_settings (yank and pasting) "{{{2
-nor <C-S>		:update<CR>
-vno <C-S>		<C-C>:update<CR>
-ino <C-S>		<C-O>:update<CR>
-
+" 3.5.MsWin "{{{2
+source $VIMRUNTIME/mswin.vim
+behave xterm
 "open fold while undo /redo
 nor <C-Z>       uzv
 ino <C-Z>       <C-O>u<C-O>zv
-"no action in visual mode
-vno <C-Z>       <esc>
-nor <C-Y>       <C-R>zv
-ino <C-Y>       <C-O>U<C-O>zv
-vno <C-Y>       <esc>
+vno <C-Z>       <Nop>
 
-" Not "+gP
+nor <C-Y>       <C-R>zv
+ino <C-Y>       <C-O><C-R><C-O>zv
+vno <C-Y>       <Nop>
+
+" Filter "+gP
 nor <C-V>	    "+gp=`]
 nor <S-Insert>	"+gp=`]
-exe 'inoremap <script> <C-V>' paste#paste_cmd['i']
-exe 'vnoremap <script> <C-V>' paste#paste_cmd['v']
-cma <C-V>       <C-R>+
-cma <S-Insert>  <C-R>+
-" CTRL-X and SHIFT-Del are Cut
-vno <c-D>       "+x
-vno <C-X>       "+x
-vno <S-Del>     "+x
-" CTRL-C and CTRL-Insert are Copy
-vno <C-C>       "+y
+" Cut
+vno <C-D>       "+x
 
-" backspace in Visual mode deletes selection
-vno <BS>        d
-
-" Use CTRL-Q to do what CTRL-V used to do
-nor <C-Q>       <C-V>
-" 4.6.Searching "{{{2
+" CTRL-A is Select all
+noremap <C-A> ggVG
+inoremap <C-A> <C-O>ggVG
+cnoremap <C-A> <C-C>ggVG
+onoremap <C-A> <C-C>ggVG
+snoremap <C-A> <C-C>ggVG
+" 3.6.Search "{{{2
 set hlsearch incsearch
 set ignorecase smartcase
 set nowrapscan
-nno   #    g*
-nno   *    g#
-nno   g#   *
-nno   g*   #
+nno   #    g* | nno   g#   *
+nno   *    g# | nno   g*   #
 vno   /    <ESC>/<C-\>e<SID>p(<SID>r("v"),"e")<CR>
 vno   ?    <ESC>?<C-\>e<SID>p(<SID>r("v"),"e")<CR>
 vno   #    <ESC>/<C-\>e<SID>p(<SID>r("v"),"e")<CR><CR><C-G>
@@ -957,14 +741,12 @@ function! s:wrap_scan_warn(d) "{{{
     " show an warning message when hit end of file.
     try
         if (a:d=='f' && v:searchforward == 1)
-                    \ || (a:d=='b' && v:searchforward == 0)
+            \ || (a:d=='b' && v:searchforward == 0)
             //
         else
             ??
         endif
     catch /^Vim\%((\a\+)\)\=:E38[45]/
-        echohl Modemsg
-        echo '[Search]'
         echohl Warningmsg
         if v:searchforward ==1
             echon 'Hit the END-Of-File.press n/N to go on'
@@ -972,9 +754,7 @@ function! s:wrap_scan_warn(d) "{{{
             echon 'Hit the TOP-Of-File.press n/N to go on'
         endif
         let c = nr2char(getchar())
-        echohl Modemsg
-        echon " ".c." "
-        echohl Moremsg
+        echohl Modemsg | echon "[".c."]" | echohl Moremsg
         if c==?"n" && v:searchforward == 1
             call search(@/,'w')
             echon 'Wrap scan to TOP'
@@ -982,8 +762,7 @@ function! s:wrap_scan_warn(d) "{{{
             call search(@/,'wb')
             echon 'Wrap scan to END'
         else
-            echohl Errormsg
-            echon 'Stoped scan'
+            echohl Errormsg | echon 'Stoped scan'
         endif
         echohl Normal
     endtry
@@ -999,15 +778,9 @@ function! s:p(p,mode) "{{{
     return escape(a:p,re_txt)
 endfunction "}}}
 function! s:r(mode) "{{{
-    if a:mode=~#"w"
-        let w = expand('<cword>')
-    elseif a:mode=~#"W"
-        let w = expand('<cWORD>')
-    elseif a:mode=~#"v"
+    if a:mode=~#"v"
         normal gv"yy
         let w = @y
-    elseif a:mode=~#"/"
-        let w = @/
     endif
     return w
 endfunction "}}}
@@ -1018,17 +791,136 @@ function! s:w(s,mode) "{{{
     else
         let ss = s:p(a:s,"s")
     endif
-    if a:mode =~"r"
-        return 's/'.ss."/".s:p(rs,"r")."/gc"
-    elseif a:mode =~"s"
-        return "/".ss
-    elseif a:mode =~"g"
-        return "silent grep! ".rs." %"
+    return 's/'.ss."/".s:p(rs,"r")."/gc"
+endfunction "}}}
+" 3.7.F1-F12 "{{{2
+"{{{3 F1 Help
+set keywordprg=":help"
+set helplang=en,cn
+cab H helpg
+nor   <F1>     K
+nno   <S-F1>   :Pydoc <C-R><C-F><CR>
+"{{{3 F2 Replace reg/
+nno   <F2>     :%<C-R>=<SID>w(@/,"")<CR><Left><Left><Left>
+vno   <F2>     :<C-R>=<SID>w(@/,"")<CR><Left><Left><Left>
+nno   <S-F2>   :%<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
+vno   <S-F2>   :<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
+"{{{3 F3 Ack-grep http://better-than-grep.com
+nor   <F3>     :Ack <C-R><C-F> %<CR>
+vno   <F3>     y:Ack <C-R>" %<CR>
+nor   <S-F3>   :Ack <C-R><C-F><CR>
+vno   <S-F3>   y:Ack <C-R>"<CR>
+"{{{3 F4 Folder
+nno   <F4>     :Ex<CR>
+nno   <S-F4>   :CtrlP<CR>
+"{{{3 F5 Execute
+nno <silent> <F5> :call <SID>exe("n")<CR>
+vno <silent> <F5> :call <SID>exe("v")<CR>
+function! s:exe(mode) "{{{
+    update
+    let bang="!"
+    if has("unix")
+        let browser = "firefox "
+        let runner="xdg-open "
+        let err_log=" 2>&1 | tee /tmp/.vim_exe.tmp"
+        let term = "gnome-terminal "
+    else
+        let browser ="firefox.lnk "
+        let runner="start "
+        let err_log=" "
+        let term = "cmd "
+    endif
+
+    if !exists("&syn")
+        exec bang.runner.file
+        return
+    else
+        let syn=&syn
+    endif
+
+    if a:mode=="n"
+        let file=' "'.expand('%:p').'"'
+        if    syn=="python"
+            let    L=getline(1)
+            if     L=~'python3' | exec bang."python3 -d ".file.err_log
+            elsei  L=~'pypy'    | exec bang."pypy -d ".file.err_log
+            else                | exec bang."python2 -d ".file.err_log
+            endif
+        elsei syn=="ruby"       | exec bang."ruby -d ".file.err_log
+        elsei syn=="perl"       | exec bang."perl -D ".file.err_log
+        elsei syn=='vim'        | exec "so %"
+        elsei syn=~'html'       | exec bang.browser.file
+        elsei syn=~'^coffee$'   | exec "CoffeeRun"
+        elsei syn=="vimwiki"    | exec "Vimwiki2HTMLBrowse"
+        elsei syn=='bat'        | exec "w !cmd"
+        elsei syn=='haskell'    | exec "!ghc %" | exec "!./%:t:r"
+        elsei syn=='c'          | exec "!gcc %" | exec "!./a.out"
+        elsei syn=='cpp'        | exec "!g++ %" | exec "!./a.out"
+        elsei syn=~'^\(sh\|expect\|bash\)$'     | exec "w !sh"
+        else                    | exec bang.runner.file
+        endif
+    elseif a:mode=="v"
+        if     syn=="python"    | exec "py ".getline('.')
+        elseif syn=="ruby"      | exec "ruby ".getline('.')
+        elseif syn=='vim'       | exec getline('.')
+        elseif syn=~'^\(sh\|expect\|bash\)$'    | exec ".w !sh"
+        endif
     endif
 endfunction "}}}
-"5.Plugins_settings{{{1
+"}}}3
+nor   <F6>   :TagbarToggle<CR>
+nor   <F7>   :GundoToggle<CR>
+"{{{3 F8 File Manager
+nor   <silent><F8>     :call <SID>file_man("")<CR>
+nor   <silent><S-F8>     :call <SID>file_man("sudo ")<CR>
+function! s:file_man(mode) "{{{
+    if has("win32") | exec "!start explorer '%:p:h'"
+    else            | exec "!".a:mode."nautilus '%:p:h' "
+    endif
+endfunction "}}}
+"{{{3 F9 Termnial
+nor   <silent><F9>   :call <SID>terminal()<CR>
+function! s:terminal() "{{{
+    if has("win32") | exec "!start cmd '%:p:h'"
+    else            | exec "!gnome-terminal --working-directory=%:p:h &"
+    endif
+endfunction "}}}
+"}}}3
+nor   <F10>   :options<CR>
+nor   <F11>   :script<CR>
+"{{{3 F12 Session
+set sessionoptions=blank,curdir,help,tabpages,winpos,winsize,resize
+nma <F12> :Hex! ~/.vim/sessions<CR>
+nma <S-F12> :call SaveSession()<CR>
+nma <C-F12> :call SaveSession("name")<CR>
+function! SaveSession(...) "{{{
+    wall
+    let ses_dir = expand('~/.vim/sessions')
+    call s:auto_mkdir(ses_dir,1)
+    let time=strftime("%y%m%d_%H%M%S")
+    if exists("a:1") && a:1=="name"
+        if input("Please Input your session name:")
+            let sesname = time."_".ses
+        else
+            echo "Invalid Input name. Stop!"
+            return
+        endif
+    else
+        let sesname = time
+    endif
+
+    try
+        exe "mksession! "."~/.vim/sessions/".sesname
+        echom "mks success! session file : ".sesname
+    catch /^vim\%((\a\+)\)\=:/
+        echoe "mks failure! error: " .v:exception
+    endtry
+endfunction "}}}
+" 4.Plugins "{{{1
 " Netrw "{{{2
-let g:netrw_liststyle      = 0
+let g:netrw_preview        = 1
+let g:netrw_liststyle      = 3
+let g:netrw_winsize        = 30
 let g:netrw_browse_split   = 0
 let g:netrw_cursor         = 3
 let g:netrw_banner         = 0
@@ -1067,12 +959,12 @@ let g:neocomplcache_quick_match_table = {
             \'1' : 0, '2' : 1, '3' : 2, '4' : 3, '5' : 4, '6' : 5, '7' : 6, '8' : 7, '9' : 8, '0' : 9,
             \}
 
-inoremap <expr><C-h>   neocomplcache#smart_close_popup()."\<left>"
-inoremap <expr><C-l>   neocomplcache#smart_close_popup()."\<right>"
-inoremap <expr><Space> neocomplcache#smart_close_popup()."\<Space>"
-inoremap <expr><CR>    neocomplcache#smart_close_popup()."\<CR>"
-inoremap <expr><BS>    neocomplcache#smart_close_popup()."\<BS>"
-inoremap <expr><C-y>   neocomplcache#close_popup()
+ino <expr><C-h>   neocomplcache#smart_close_popup()."\<left>"
+ino <expr><C-l>   neocomplcache#smart_close_popup()."\<right>"
+ino <expr><Space> neocomplcache#smart_close_popup()."\<Space>"
+ino <expr><CR>    neocomplcache#smart_close_popup()."\<CR>"
+ino <expr><BS>    neocomplcache#smart_close_popup()."\<BS>"
+ino <expr><C-y>   neocomplcache#close_popup()
 
 "{{{ omni comp
 aug neocomp_omni_compl "{{{
@@ -1095,24 +987,18 @@ let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
 let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 "}}}
 
-" snippets_complete
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-TAB> pumvisible() ? "\<C-p>" : "\<s-TAB>"
-" imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ?
-" \ "\<Plug>(neocomplcache_snippets_expand)" : 
-" \ pumvisible() ? "\<C-n>" : "\<TAB>"
-" imap <expr><S-TAB> neocomplcache#sources#snippets_complete#expandable() ?
-" \ "\<Plug>(neocomplcache_snippets_expand)" :
-" \ pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" neocompl cache snippets_complete
+ino <expr><TAB>   pumvisible() ? "\<C-n>" : "\<TAB>"
+ino <expr><s-TAB> pumvisible() ? "\<C-p>" : "\<s-TAB>"
 
 imap <C-k>  <Plug>(neocomplcache_snippets_expand)
 smap <C-k>  <Plug>(neocomplcache_snippets_expand)
 nmap <c-k> a<c-k><esc>
 
 let g:neocomplcache_snippets_dir="~/.vim/my_snips/snippets_complete/"
-map <leader>se :Sp\|NeoComplCacheEditSnippets<cr>
-map <leader>sr :Sp\|NeoComplCacheEditRuntimeSnippets<cr>
-map <leader>s_ :Sp\|e ~/.vim/my_snips/snippets_complete/_.snip <cr>
+map <leader>se :sp\|NeoComplCacheEditSnippets<cr>
+map <leader>sr :sp\|NeoComplCacheEditRuntimeSnippets<cr>
+map <leader>s_ :sp\|e ~/.vim/my_snips/snippets_complete/_.snip <cr>
 
 "Vimwiki "{{{2
 map <Leader>ww <Plug>VimwikiIndex
@@ -1127,20 +1013,18 @@ else
 endif
 let wiki_1.maxhi = 0
 let wiki_1.ext   = '.vwk'
+let wiki_1.diary_index   = 'index'
+let wiki_1.diary_rel_path   = 'Writing/Diary/'
 let wiki_1.css_name = 'style.css'
 let wiki_1.nested_syntaxes = { 'python': 'python',
-            \'cpp': 'cpp', 'c': 'c',
-            \'vim': 'vim', 'sh':'sh',
-            \'html':'html',
-            \}
+            \'cpp': 'cpp', 'c': 'c','vim': 'vim', 'sh': 'sh',
+            \'html': 'html'}
 let g:vimwiki_list = [wiki_1]
 
 let g:vimwiki_file_exts='pdf,txt,doc,rtf,xls,zip,rar,7z,gz
-            \,py,sh,rb,pl,lua,go
-            \,c,cpp,h,conf
-            \,js,css,html,php,coffee
-            \,j,java,xml
-            \,vim,vba,vwk'
+            \,py,sh,rb,pl,lua,go,hs,conf,j,vim,vba,vwk
+            \,c,cpp,h,java,xml
+            \,js,css,html,php,coffee'
 let g:vimwiki_menu          = ""
 let g:vimwiki_dir_link      = 'index'
 let g:vimwiki_browsers      = ['firefox']
@@ -1151,6 +1035,12 @@ let g:vimwiki_use_mouse     = 1
 let g:vimwiki_folding       = 1
 let g:vimwiki_fold_lists    = 0
 let g:vimwiki_hl_cb_checked = 1
+function! s:sub_list(sym) "{{{
+    let line=getline('.')
+    let m=substitute(line,'^\(\s*\)\%([*#-]\s\|\%(\d\.\)\+\s\)\=\ze.*',
+                \'\1'.a:sym.' ','')
+    call setline(line('.'),m)
+endfunction "}}}
 function! s:vimwiki_my_set() "{{{
 
     silent! syn clear VimwikiTimeStamp
@@ -1177,21 +1067,16 @@ function! s:vimwiki_my_set() "{{{
         exe 'syn match VimwikiHeader'.i.' /'.g:vimwiki_rxH{i}.'/ contains=VimwikiTodo,VimwikiNoExistsLink,VimwikiLink,@Spell'
     endfor
 
-    " for i in range(1,9)
-    "     exe 'syn match Vimwiki_Posit'.i.' /\S\@<!\(+'.i.'\|\[+'.i.'\]\)\S\@!/'
-    "     exe 'syn match Vimwiki_minus'.i.' /\S\@<!\(-'.i.'\|\[-'.i.'\]\)\S\@!/'
-    " endfor
-    " syn match Vimwiki_Posit0 /\(^\s*\|.*\s\)\(+0\|\[+0\]\)\(\s*$\|\s.*\)/
-    " syn match Vimwiki_minus0 /\(^\s*\|.*\s\)\(-0\|\[-0\]\)\(\s*$\|\s.*\)/
-
     let g:vimwiki_rxListBullet = '^\s*\%(\*\|-\|#\)\s'
     let g:vimwiki_rxListNumber = '^\s*\(%\d\+[\.)]\)\+\s'
     syn clear VimwikiList
     execute 'syntax match VimwikiList /'.g:vimwiki_rxListBullet.'/'
     execute 'syntax match VimwikiList /'.g:vimwiki_rxListNumber.'/'
     hi link VimwikiList Keyword
-    hi link Vimwikibold Title
     hi link VimwikiTimeStamp SpecialComment
+    
+    hi VimwikiBold NONE
+    hi link VimwikiBold Title
 
     if g:vimwiki_hl_cb_checked
         syn clear VimwikiCheckBoxDone
@@ -1203,17 +1088,11 @@ function! s:vimwiki_my_set() "{{{
                     \ ' contains=VimwikiNoExistsLink,VimwikiLink'
     endif
 
-    function! s:sub_list(sym) "{{{
-        let line=getline('.')
-        let m=substitute(line,'^\(\s*\)\%([*#-]\s\|\%(\d\.\)\+\s\)\=\ze.*',
-                    \'\1'.a:sym.' ','')
-        call setline(line('.'),m)
-    endfunction "}}}
     map <buffer><leader>ee <Plug>VimwikiToggleListItem
-    nma <buffer><leader>e1 :call <SID>sub_list('*')<cr>
-    nma <buffer><leader>e2 :call <SID>sub_list('#')<cr>
-    nma <buffer><leader>e3 :call <SID>sub_list('-')<cr>
-    nma <buffer><leader>e4 :call <SID>sub_list('1.')<cr>
+    nma <buffer><leader>e1 :call <SID>sub_list('1.')<cr>
+    nma <buffer><leader>e2 :call <SID>sub_list('*')<cr>
+    nma <buffer><leader>e3 :call <SID>sub_list('#')<cr>
+    nma <buffer><leader>e4 :call <SID>sub_list('-')<cr>
 
     map <buffer><leader>wg <Plug>VimwikiGenerateLinks
     map <buffer><Leader>wr <Plug>VimwikiRenameLink
@@ -1230,13 +1109,6 @@ function! s:vimwiki_my_set() "{{{
 
     map <buffer><expr> <rightmouse><leftmouse> "<Plug>VimwikiGoBackLink"
     ima <buffer><expr> <rightmouse><leftmouse> "<Plug>VimwikiGoBackLink"
-
-    " imap <buffer><expr><TAB> neocomplcache#sources#snippets_complete#expandable() ?
-    " \ "\<Plug>(neocomplcache_snippets_expand)" : 
-    " \ pumvisible() ? "\<C-n>" :  vimwiki#tbl#kbd_tab()
-    " imap <buffer><expr><S-TAB> neocomplcache#sources#snippets_complete#expandable() ?
-    " \ "\<Plug>(neocomplcache_snippets_expand)" :
-    " \ pumvisible() ? "\<C-p>" :  vimwiki#tbl#kbd_shift_tab()
 
     imap <buffer><expr><TAB> 
     \ pumvisible() ? "\<C-n>" :  vimwiki#tbl#kbd_tab()
@@ -1258,9 +1130,7 @@ nmap  <leader>gs :Git diff --stat<CR>
 nmap  <leader>gk :Git checkout
 nmap  <leader>gr :Git branch
 function! s:git_add() "{{{
-    call s:last_update()
-    update!
-    redraw
+    LastUpdate | update! | redraw
     try
         exec "Git add %"
     catch /^Vim\%((\a\+)\)\=:E492/
@@ -1270,82 +1140,13 @@ function! s:git_add() "{{{
     endtry
 endfunction "}}}
 "Django "{{{2
-aug setDjango
-    au!
-    au Filetype python call s:setDjango()
-    au Syntax djangoHtml call s:setDjangoHtml()
-    autocmd BufEnter *.py call SetAppDir()
-aug END
-fun! s:setDjangoHtml()
-    let g:surround_{char2nr("b")} = "{% block\1 \r..*\r &\1%}\r{% endblock %}"
-    let g:surround_{char2nr("i")} = "{% if\1 \r..*\r &\1%}\r{% endif %}"
-    let g:surround_{char2nr("w")} = "{% with\1 \r..*\r &\1%}\r{% endwith %}"
-    let g:surround_{char2nr("c")} = "{% comment\1 \r..*\r &\1%}\r{% endcomment %}"
-    let g:surround_{char2nr("f")} = "{% for\1 \r..*\r &\1%}\r{% endfor %}"
-    let g:surround_{char2nr("v")} = "{{ \1 \r..*\r &\1\r }}"
-endfun
-fun! s:setDjango()
-    let g:last_relative_dir = ''
-    nnoremap \1 :call RelatedFile ("models.py")<cr>
-    nnoremap \2 :call RelatedFile ("views.py")<cr>
-    nnoremap \3 :call RelatedFile ("urls.py")<cr>
-    nnoremap \4 :call RelatedFile ("admin.py")<cr>
-    nnoremap \5 :call RelatedFile ("tests.py")<cr>
-    nnoremap \6 :call RelatedFile ( "templates/" )<cr>
-    nnoremap \7 :call RelatedFile ( "templatetags/" )<cr>
-    nnoremap \8 :call RelatedFile ( "management/" )<cr>
-    nnoremap \0 :e settings.py<cr>
-    nnoremap \9 :e urls.py<cr>
-endfun
-
-fun! RelatedFile(file)
-    #This is to check that the directory looks djangoish
-    if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-        exec "edit %:h/" . a:file
-        let g:last_relative_dir = expand("%:h") . '/'
-        return ''
-    endif
-    if g:last_relative_dir != ''
-        exec "edit " . g:last_relative_dir . a:file
-        return ''
-    endif
-    echo "Cant determine where relative file is : " . a:file
-    return ''
-endfun
-
-fun! SetAppDir()
-    if filereadable(expand("%:h"). '/models.py') || isdirectory(expand("%:h") . "/templatetags/")
-        let g:last_relative_dir = expand("%:h") . '/'
-        return ''
-    endif
-endfun
 nmap <leader>js :!python2 manage.py syncdb<cr>
-"Misc Plugins"{{{2
+" Misc Plugins"{{{2
 let g:vimsyn_noerror = 1
-
-"Yong IM input
-let g:input_toggle = 0
-function! Yong2en()
-  let g:input_toggle = system("yong-vim 1 -w")
-endfunction
-function! Yong2zh()
-  " if g:input_toggle != 0
-      let g:input_toggle = system("yong-vim 0")
-      " let g:input_toggle =  0
-  " endif
-endfunction
-
-let g:ConqueTerm_FastMode     = 1
-let g:ConqueTerm_TERM         = 'xterm'
-let g:ConqueTerm_ExecFileKey  = '<leader>cqx'
-let g:ConqueTerm_SendFileKey  = '<leader>cqf'
-let g:ConqueTerm_SendVisKey   = '<leader>cqv'
-let g:ConqueTerm_PromptRegex  = '^\((\w\+)\)\ = [\w\+@[0-9A-Za-z_.-]\+ [0-9A-Za-z_./\~,:-]\+\$'
 
 nor <leader>cc :TComment<cr>
 nor \\ :TComment<cr>
 
-let g:galaxy_statusline_blink = 0
 
 nma <leader>cA :ColorVsuball<CR>
 
