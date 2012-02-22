@@ -1,75 +1,57 @@
-" vim: ft=vim :
+" vim:set ft=pentadactyl:
 
-
-"setting
 set! browser.tabs.closeWindowWithLastTab=false
-"set showtabline=always
 set complete=lsf
-
-"set guioptions+=B
-" set guioptions-=r
-
-"set defsearch='g'
-"set suggestengines='g'
-
 
 set passkeys+=towords.com:abcdrABCDR<space><cr>
 set passkeys+=*:<c-c>
-"
-map <F2> :bmarks<cr> 
 
+" Loading "{{{1
 map <space>vr :source ~/.pentadactylrc<cr>
-map sw :bmarks 
-noremap d ;
-noremap ; :
-"Moving
-noremap J 10j
-noremap K 10k
-noremap H 10h
-noremap L 10l
-nmap gg <Home>
-nmap G <End>
 
 noremap s :stop<cr>
 noremap S :stopall<cr>
-" noremap <c-f> <c-u>
-
-noremap <scroll-up-line> 19k
-noremap <scroll-down-line> 19j
-"window
-noremap <c-w><c-q> d
-noremap <c-w><c-e> d
-noremap <c-w><c-w> d
-noremap <c-w><c-x> d
-noremap <c-v><c-q> d
-
-noremap <c-w>q d
-noremap <c-w>Q d
-noremap <c-q> d
+map <space>R :reloada !<cr>
+map <space>r :reloada<cr>
+" Basic "{{{1
+noremap d ;
+noremap ; :
+map <c-q> <Nop>
+nmap <c-q> <Nop>
 imap <c-q> <Nop>
+Imap <c-q> <Nop>
 tmap <c-q> <Nop>
 cmap <c-q> <Nop>
-noremap q d
-noremap Q d
-nnoremap <c-w><c-x> :q<cr>
+vmap <c-q> <Nop>
+omap <c-q> <Nop>
+noremap q <Nop>
+noremap Q  <Nop>
 
-nnoremap <c-w><c-w> gt
-nnoremap <c-w><c-e> gT
+map <c-j> <Nop>
+map <c-k> <Nop>
+" Moving "{{{1
+
+" Window "{{{1
+noremap <c-w><c-w> gt
+noremap <c-w><c-e> gT
+noremap <c-w><c-q> :tabclose<cr>
+noremap <c-w><c-x> :tabclose<cr>
+noremap <c-w><c-z> <c-s-t>
+noremap <c-w><c-s> <c-s-e>
+noremap <c-w><c-p> :bp<cr>
+noremap <c-w><c-n> :bN<cr>
+
+noremap <c-w>P  :pin<cr>
+noremap <c-w>U  :unpin<cr>
+
+
 nnoremap <s-tab> gT
-nnoremap <c-w><c-r> <c-s-t>
-nnoremap <c-w><c-z> <c-s-t>
 
-nnoremap <m-up> gu
-"group your tab hotkey
-nnoremap <c-w><c-s> <c-s-e>
+nnoremap <m-up> gu  
 
-nmap <bs> <c-o>
-
-"edit
+" Edit "{{{1
 map <c-c> <yank-word>
 nmap <c-s> :redraw<cr>
-noremap <space>g :tabopen g 
-noremap <space>w :tabopen w 
-"Reloading
-noremap <space>R :reloada !<cr>
-noremap <space>r :reloada<cr>
+nor <space>tt y:tabopen http://translate.google.com.hk/translate?act=url&hl=en&ie=UTF8&prev=_t&sl=auto&tl=zh-CN&u=<C-V><C-V><CR>
+nor <space>tr <yank-word>:tabopen http://translate.google.cn/?hl=en#auto|zh-CN|<C-V><C-V><CR>
+

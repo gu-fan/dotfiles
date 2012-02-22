@@ -75,6 +75,7 @@ alias -g wpx='python2 ~/Documents/Tools/wallproxy-plus/local/startup.py'
 alias -g lsg='ls -a | grep --color=auto'
 alias -g gvim='gvim --remote-tab'
 alias -g mp='./manage.py'
+alias -g :e='vim'
 stty -ixon
 
 # Set up auto extension stuff
