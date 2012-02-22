@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
 "  Script: Rykka's Vimrc
 "  Author: Rykka <Rykka10(at)gmail.com>
-"  Update: 2012-02-17
+"  Update: 2012-02-22
 "  License: WTFPL v2.0
 """""""""""""""""""""""""""""""""""""""""""""""""
 " 1.Settings{{{1
@@ -53,8 +53,12 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'mattn/calendar-vim'
 
 Bundle 'fs111/pydoc.vim'
+let g:pydoc_cmd = "pydoc2"
 Bundle 'ode79/pythonfolding'
 let g:python_fold_block = "all"
+
+Bundle 'vim-scripts/fcitx.vim'
+"Bundle 'vim-scripts/vimwiki.vim'
 
 Bundle 'Rykka/ColorV'
 Bundle 'Rykka/vim-galaxy'
@@ -107,7 +111,7 @@ set completeopt=menuone
 set pumheight=10            " Keep a small completion window
 
 set isfname-==
-set iskeyword+=_,$,@ iskeyword-=#
+set iskeyword+=$,@ iskeyword-=#
 set comments=n://,fb:-,n:>,fb:*
 set formatlistpat="^\s*[(\d)*#-]\+[\]:.)}\t ]\s*"
 set formatoptions+=1on2mMq
@@ -154,8 +158,8 @@ if has("gui_running")
     elseif has("gui_mac")
         set guifont=Monaco:h13
     elseif has("gui_gtk2") || has("gui_gnome")
-        set guifont=Dejavu\ Sans\ Mono\ 13,WenQuanYi\ Micro\ Hei\ 13
-        set gfw=Wenquanyi\ Micro\ Hei\ Mono\ 13,WenQuanYi\ Zen\ Hei\ 13
+        set guifont=Dejavu\ Sans\ Mono\ 14,WenQuanYi\ Micro\ Hei\ 14
+        set gfw=Wenquanyi\ Micro\ Hei\ Mono\ 14,WenQuanYi\ Zen\ Hei\ 14
     endif
 endif
 " menu
@@ -195,7 +199,7 @@ set nolazyredraw
 set visualbell t_vb=
 " 1.4.vim version"{{{2
 if v:version >= 703 "{{{
-    let &colorcolumn=s:win_col-1
+    " let &colorcolumn=s:win_col-1
 
     call s:auto_mkdir(expand('~/.vim_undo'),1)
     set undofile undodir=~/.vim_undo/   " persistent undo
@@ -298,6 +302,9 @@ aug au_Filetypes "{{{
     au BufRead,BufNew,BufNewFile *.mako    setl ft=mako
     au BufRead,BufNew,BufNewFile *.conf    setl ft=conf
     au BufRead,BufNew,BufNewFile tmux.conf setl ft=tmux
+    au FileType javascript call <SID>js_fold()
+    au FileType css call <SID>cs_fold()
+    " au FileType javascript setl fdm=syntax
 aug END "}}}
 aug au_Htmls "{{{
     au!
@@ -388,9 +395,9 @@ nno <silent> zz @=(&foldlevel?'zM':'zR')<CR>
 nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
 nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
 vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
-nor <silent> <leader>fm :setl fdm=<C-R>=&fdm=~'ke'?'indent'
-            \:&fdm=~'in'?'syntax'
-            \:&fdm=='sy'?'expr':'marker'<CR><BAR>ec &fdm<CR>
+nor <silent> <leader>fm :setl fdm=<C-R>=&fdm=~'mar'?'indent'
+            \:&fdm=~'ind'?'syntax'
+            \:&fdm=~'syn'?'expr':'marker'<CR><BAR>ec &fdm<CR>
 function! s:set_fold_markers(lnum_st, lnum_end) "{{{
 " let foldmarkers to be applied with space before a comment.
     let markers = split(&foldmarker, ",")
@@ -531,16 +538,12 @@ endfun
 command! -bar Split call <SID>split()
 " 3.3.HJKL "{{{2
 set scrolloff=3 scrolljump=1
-nno   H   h
-nno   J   j
-nno   K   k
-nno   L   l
+nno   H   h  |  nno   L   l
+nno   J   j  |  nno   K   k
 
-nno   j   gj
-nno   k   gk
+nno   j   gj |  nno   k   gk
 " xno: visual mode exclude select mode.
-xno   j   gj
-xno   k   gk
+xno   j   gj |  xno   k   gk
 
 nno   <silent>   <c-h>   K
 nno   <silent>   <c-l>   :let @/=''\|redraw!<CR>
@@ -987,6 +990,7 @@ let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 "}}}
 
 " neocompl cache snippets_complete
+ino <expr>.   pumvisible() ? "." : "."
 ino <expr><TAB>   pumvisible() ? "\<C-n>" : "\<TAB>"
 ino <expr><s-TAB> pumvisible() ? "\<C-p>" : "\<s-TAB>"
 
@@ -1088,10 +1092,10 @@ function! s:vimwiki_my_set() "{{{
     endif
 
     map <buffer><leader>ee <Plug>VimwikiToggleListItem
-    nma <buffer><leader>e1 :call <SID>sub_list('1.')<cr>
-    nma <buffer><leader>e2 :call <SID>sub_list('*')<cr>
-    nma <buffer><leader>e3 :call <SID>sub_list('#')<cr>
-    nma <buffer><leader>e4 :call <SID>sub_list('-')<cr>
+    map <buffer><leader>e1 :call <SID>sub_list('1.')<cr>
+    map <buffer><leader>e2 :call <SID>sub_list('*')<cr>
+    map <buffer><leader>e3 :call <SID>sub_list('#')<cr>
+    map <buffer><leader>e4 :call <SID>sub_list('-')<cr>
 
     map <buffer><leader>wg <Plug>VimwikiGenerateLinks
     map <buffer><Leader>wr <Plug>VimwikiRenameLink
@@ -1140,8 +1144,36 @@ function! s:git_add() "{{{
 endfunction "}}}
 "Django "{{{2
 nmap <leader>js :!python2 manage.py syncdb<cr>
-" Misc Plugins"{{{2
+" PHP "{{{2
+let php_sql_query = 1
+let php_folding=2
+let php_htmlInStrings = 1
+let php_parent_error_close = 1
+" JavaScript {{{2
+function! s:js_fold() "{{{
+    setl foldmethod=syntax
+    syn region foldBraces start=/{/ skip=#/\%([^/]\|\/\)*/\|'[^']*'\|"[^"]*"#
+                \ end=/}/ transparent fold keepend extend 
+    function! JS_foldtext() "{{{
+        return "+-" . v:folddashes . printf("%3d",(v:foldend-v:foldstart+1)) .
+            \ " lines: " . substitute(getline(v:foldstart),'^\s*','','')
+    endfunction "}}}
+    setl foldtext=JS_foldtext()
+endfunction "}}}
+" Css {{{2
+function! s:cs_fold() "{{{
+    setl foldmethod=syntax
+    syn region foldBraces start=/{/ skip=#/[^/]*/\|'[^']*'\|"[^"]*"#
+                \ end=/}/ transparent fold keepend extend
+    function! CS_foldtext() "{{{
+        return "+-" . v:folddashes . printf("%3d",(v:foldend-v:foldstart+1)) .
+            \ " lines: " . substitute(getline(v:foldstart),'^\s*','','')
+    endfunction "}}}
+    setl foldtext=CS_foldtext()
+endfunction "}}}
+" Misc Plugins "{{{2
 let g:vimsyn_noerror = 1
+
 
 nor <leader>cc :TComment<cr>
 nor \\ :TComment<cr>
